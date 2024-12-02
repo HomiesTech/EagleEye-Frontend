@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import AddDevice from "./component/AddDevice"; // AddDevice Component
-import ListDevice from "./component/ListDevice"; // Create this component
+import ListDevice from "./component/ListDevice"; // ListDevice Component
+import Customer from "./component/Customer"; // Customer Component
 import CONSTANTS from "./config/constant";
 
 const App: React.FC = () => {
@@ -40,7 +41,11 @@ const App: React.FC = () => {
               <div className="font-bold mb-2">Device Monitoring</div>
               <ul className="space-y-2">
                 <li>Devices</li>
-                <li>Customers</li>
+                <li>
+                  <Link to="/customer" className="hover:underline">
+                    Customers
+                  </Link>
+                </li>
                 <li>Alerts</li>
                 <li>Advisory</li>
                 <li>History</li>
@@ -53,7 +58,7 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/add-device" element={<AddDevice />} />
               <Route path="/list-device" element={<ListDevice />} />
-              {/* Other Routes */}
+              <Route path="/customer" element={<Customer />} />
             </Routes>
           </main>
         </div>
