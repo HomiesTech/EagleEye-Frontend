@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import AddDevice from "./component/AddDevice"; // AddDevice Component
 import ListDevice from "./component/ListDevice"; // ListDevice Component
 import Customer from "./component/Customer"; // Customer Component
+import Devices from "./component/Devices"; // Devices Component
 import CONSTANTS from "./config/constant";
 
 const App: React.FC = () => {
@@ -40,7 +41,11 @@ const App: React.FC = () => {
             <div>
               <div className="font-bold mb-2">Device Monitoring</div>
               <ul className="space-y-2">
-                <li>Devices</li>
+                <li>
+                  <Link to="/devices" className="hover:underline">
+                    Devices
+                  </Link>
+                </li>
                 <li>
                   <Link to="/customer" className="hover:underline">
                     Customers
@@ -53,12 +58,18 @@ const App: React.FC = () => {
             </div>
           </aside>
 
+
+
+        {/* routes here */}
+
+        
           {/* Main Content */}
           <main className="flex-1 p-6 bg-gray-800 text-white">
             <Routes>
               <Route path="/add-device" element={<AddDevice />} />
               <Route path="/list-device" element={<ListDevice />} />
               <Route path="/customer" element={<Customer />} />
+              <Route path="/devices" element={<Devices />} />
             </Routes>
           </main>
         </div>
