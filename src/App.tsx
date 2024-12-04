@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import AddDevice from "./component/AddDevice"; // AddDevice Component
 import ListDevice from "./component/ListDevice"; // ListDevice Component
 import Customer from "./component/Customer"; // Customer Component
 import Devices from "./component/Devices"; // Devices Component
 import CONSTANTS from "./config/constant";
+import { getCurrentDateTimeInIST } from "./config/DateAndTime";
 
 const App: React.FC = () => {
+  const [dateTime,setDateTime] =useState<string>(getCurrentDateTimeInIST());
+useEffect(() => {
+  const interval =setInterval(() => {
+    setDateTime(getCurrentDateTimeInIST);
+  },1000);
+  return()=> clearInterval(interval);
+},[]);
+
+
   return (
     <Router>
       <div className="flex flex-col h-screen mx-auto border-2 border-white">
@@ -15,7 +25,7 @@ const App: React.FC = () => {
           <div className="font-bold">EagleEye (Homenetics)</div>
           <div>
             <span className="mr-4">Version: {CONSTANTS.version}</span>
-            <span>Date: &lt;DATE TIME IN UTC&gt;</span>
+            <span>Date:{dateTime}</span>
           </div>
         </header>
 

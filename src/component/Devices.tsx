@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+// Interface definition with codeVersion field added
 interface Device {
   deviceId: number;
   deviceName: string | null;
   macAddress: string | null;
   ipAddress: string | null;
   online: boolean;
-  createdAt: string;
-  updatedAt: string;
+codeVersion: string | null;  
 }
 
 const Devices: React.FC = () => {
@@ -40,7 +40,7 @@ const Devices: React.FC = () => {
 
   // Filter devices based on search query
   const filteredDevices = devices.filter((device) =>
-    (device.deviceName || "").toLowerCase().includes(searchQuery.toLowerCase())
+    (device.deviceId || "").toString().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
@@ -59,7 +59,7 @@ const Devices: React.FC = () => {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Search Devices..."
+          placeholder="Search Devices ID..."
           value={searchQuery}
           onChange={handleSearch}
           className="w-full p-2 bg-gray-900 border border-white rounded text-white"
@@ -75,20 +75,26 @@ const Devices: React.FC = () => {
             <th className="p-2 border border-white">MAC Address</th>
             <th className="p-2 border border-white">IP Address</th>
             <th className="p-2 border border-white">Online</th>
-            <th className="p-2 border border-white">Created At</th>
-            <th className="p-2 border border-white">Updated At</th>
+            <th className="p-2 border border-white">Version</th> 
           </tr>
         </thead>
         <tbody>
           {filteredDevices.map((device) => (
             <tr key={device.deviceId} className="text-white">
-              <td className="p-2 border border-white">{device.deviceId}</td>
+              <td className="p-2 border border-white">
+                <a href={`https://service.homenetics.in/eagleeye/devices/${device.deviceId}`} className="text-blue-500 hover:underline">
+                  {device.deviceId}
+                </a>
+              </td>
               <td className="p-2 border border-white">{device.deviceName || "N/A"}</td>
-              <td className="p-2 border border-white">{device.macAddress || "N/A"}</td>
+              <td className="p-2 border border-white">
+                <a href={`https://service.homenetics.in/eagleeye/devices/${device.deviceId}`} className="text-blue-500 hover:underline">
+                  {device.macAddress || "N/A"}
+                </a>
+              </td>
               <td className="p-2 border border-white">{device.ipAddress || "N/A"}</td>
               <td className="p-2 border border-white">{device.online ? "Yes" : "No"}</td>
-              <td className="p-2 border border-white">{new Date(device.createdAt).toLocaleString()}</td>
-              <td className="p-2 border border-white">{new Date(device.updatedAt).toLocaleString()}</td>
+              <td className="p-2 border border-white">{device.codeVersion || "N/A"}</td> {/* Display codeVersion */}
             </tr>
           ))}
         </tbody>
