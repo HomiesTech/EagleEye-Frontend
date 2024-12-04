@@ -4,11 +4,11 @@ import axios from "axios";
 // Interface definition with codeVersion field added
 interface Device {
   deviceId: number;
-  deviceName: string | null;
+  ssid: string | null;
   macAddress: string | null;
   ipAddress: string | null;
   online: boolean;
-codeVersion: string | null;  
+  codeVersion: string | null;  
 }
 
 const Devices: React.FC = () => {
@@ -86,7 +86,7 @@ const Devices: React.FC = () => {
                   {device.deviceId}
                 </a>
               </td>
-              <td className="p-2 border border-white">{device.deviceName || "N/A"}</td>
+              <td className="p-2 border border-white">{device.ssid || "N/A"}</td>
               <td className="p-2 border border-white">
                 <a href={`https://service.homenetics.in/eagleeye/devices/${device.deviceId}`} className="text-blue-500 hover:underline">
                   {device.macAddress || "N/A"}
