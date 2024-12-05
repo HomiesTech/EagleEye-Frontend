@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 // Interface definition with codeVersion field added
 interface Device {
@@ -82,15 +84,17 @@ const Devices: React.FC = () => {
           {filteredDevices.map((device) => (
             <tr key={device.deviceId} className="text-white">
               <td className="p-2 border border-white">
-                <a href={`https://service.homenetics.in/eagleeye/devices/${device.deviceId}`} className="text-blue-500 hover:underline">
+              <Link to={`/device/${device.deviceId}`} className="text-blue-500 hover:underline">
                   {device.deviceId}
-                </a>
+                </Link>
+
               </td>
               <td className="p-2 border border-white">{device.ssid || "N/A"}</td>
               <td className="p-2 border border-white">
-                <a href={`https://service.homenetics.in/eagleeye/devices/${device.deviceId}`} className="text-blue-500 hover:underline">
+              <Link to={`/device/${device.deviceId}`} className="text-blue-500 hover:underline">
                   {device.macAddress || "N/A"}
-                </a>
+                </Link>
+
               </td>
               <td className="p-2 border border-white">{device.ipAddress || "N/A"}</td>
               <td className="p-2 border border-white">{device.online ? "Yes" : "No"}</td>

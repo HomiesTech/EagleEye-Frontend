@@ -6,6 +6,7 @@ import Customer from "./component/Customer"; // Customer Component
 import Devices from "./component/Devices"; // Devices Component
 import CONSTANTS from "./config/constant";
 import { getCurrentDateTimeInIST } from "./config/DateAndTime";
+import DevicePage from "./component/DevicePage";
 
 const App: React.FC = () => {
   const [dateTime,setDateTime] =useState<string>(getCurrentDateTimeInIST());
@@ -80,6 +81,7 @@ useEffect(() => {
               <Route path="/list-device" element={<ListDevice />} />
               <Route path="/customer" element={<Customer />} />
               <Route path="/devices" element={<Devices />} />
+        <Route path="/device/:id" element={<DevicePage />} />
             </Routes>
           </main>
         </div>
