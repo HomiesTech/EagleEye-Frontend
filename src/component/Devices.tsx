@@ -76,7 +76,7 @@ const Devices: React.FC = () => {
             <th className="p-2 border border-white">Name</th>
             <th className="p-2 border border-white">MAC Address</th>
             <th className="p-2 border border-white">IP Address</th>
-            <th className="p-2 border border-white">Online</th>
+            <th className="p-2 border border-white">Active</th>
             <th className="p-2 border border-white">Version</th> 
           </tr>
         </thead>
