@@ -9,7 +9,7 @@ interface Device {
   ssid: string | null;
   macAddress: string | null;
   ipAddress: string | null;
-  online: boolean;
+  activeState: boolean;
   codeVersion: string | null;  
 }
 
@@ -97,7 +97,14 @@ const Devices: React.FC = () => {
 
               </td>
               <td className="p-2 border border-white">{device.ipAddress || "N/A"}</td>
-              <td className="p-2 border border-white">{device.online ? "Yes" : "No"}</td>
+              <td className="p-2 border border-white">
+  <span
+    className={`w-4 h-4 inline-block rounded-full ${
+      device.activeState ? "bg-green-500" : "bg-red-500"
+    }`}
+    title={device.activeState ? "Active" : "Inactive"} // Tooltip for additional clarity
+  ></span>
+</td>
               <td className="p-2 border border-white">{device.codeVersion || "N/A"}</td> {/* Display codeVersion */}
             </tr>
           ))}

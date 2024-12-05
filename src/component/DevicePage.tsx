@@ -71,13 +71,13 @@ const DevicePage: React.FC = () => {
   }
 
   return (
-    <div className="bg-black text-white min-h-screen p-4">
+    <div className="bg-gray-900 text-white min-h-screen p-4">
      
 
       {/* Device and Connection Info */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {/* Device Info */}
-        <div className="p-4 border border-gray-700 rounded-lg">
+        <div className="p-4 border border-white rounded-lg">
           <h3 className="font-bold mb-2">Device Info</h3>
           <p>Id: {device.deviceId}</p>
           <p>DeviceName:  {device.deviceName}</p>
@@ -92,7 +92,7 @@ const DevicePage: React.FC = () => {
         </div>
 
         {/* Connection Info */}
-        <div className="p-4 border border-gray-700 rounded-lg">
+        <div className="p-4 border border-whtie rounded-lg">
           <h3 className="font-bold mb-2">Connection Info</h3>
           <p>Boot Time: {device.bootTime ? new Date(device.bootTime).toLocaleString() : "N/A"}</p>
           <p>Active State: {device.activeState || "N/A"}</p>
@@ -101,7 +101,7 @@ const DevicePage: React.FC = () => {
         </div>
 
         {/* Status Indicators */}
-        <div className="p-4 border border-gray-700 rounded-lg">
+        <div className="p-4 border border-white rounded-lg">
           <h3 className="font-bold mb-2">Status Indicators</h3>
           <div className="grid grid-cols-4 gap-2">
             {Array(8)
@@ -121,37 +121,37 @@ const DevicePage: React.FC = () => {
       </div>
 
       {/* User Table */}
-      <div className="p-4 border border-gray-700 rounded-lg">
+      <div className="p-4 border border-white rounded-lg">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-bold">Users</h3>
         </div>
-        <table className="w-full border-collapse border border-gray-700">
+        <table className="w-full border-collapse border border-white">
           <thead>
             <tr>
-              <th className="border border-gray-700 px-4 py-2">User ID</th>
-              <th className="border border-gray-700 px-4 py-2">SSID</th>
-              <th className="border border-gray-700 px-4 py-2">Name</th>
-              <th className="border border-gray-700 px-4 py-2">IP Address</th>
-              <th className="border border-gray-700 px-4 py-2">Failures</th>
+              <th className="border border-white px-4 py-2">User ID</th>
+              <th className="border border-white px-4 py-2">SSID</th>
+              <th className="border border-white px-4 py-2">Name</th>
+              <th className="border border-white px-4 py-2">IP Address</th>
+              <th className="border border-white px-4 py-2">Failures</th>
             </tr>
           </thead>
           <tbody>
             {device.deviceUsers && device.deviceUsers.length > 0 ? (
               device.deviceUsers.map((user, index) => (
                 <tr key={index}>
-                  <td className="border border-gray-700 px-4 py-2">
+                  <td className="border border-white px-4 py-2">
                     {user.userCode || "N/A"}
                   </td>
-                  <td className="border border-gray-700 px-4 py-2">
+                  <td className="border border-white px-4 py-2">
                     {device.ssid || "N/A"}
                   </td>
-                  <td className="border border-gray-700 px-4 py-2">
+                  <td className="border border-white px-4 py-2">
                     {user.name || "N/A"}
                   </td>
-                  <td className="border border-gray-700 px-4 py-2">
+                  <td className="border border-white px-4 py-2">
                     {user.userIpAddress || "N/A"}
                   </td>
-                  <td className="border border-gray-700 px-4 py-2">
+                  <td className="border border-white px-4 py-2">
                     {user.userFailureCount || "0"}
                   </td>
                 </tr>
