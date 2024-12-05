@@ -97,28 +97,38 @@ const DevicePage: React.FC = () => {
           <p>Boot Time: {device.bootTime ? new Date(device.bootTime).toLocaleString() : "N/A"}</p>
           <p>Active State: {device.activeState || "N/A"}</p>
           <p>Powersave Mode: {device.powersave ? "True" : "False"}</p>
-          <p>DownloadMqttUrlRequest: {device.downloadMqttUrlResponseCode ? "200" : "null"}</p>
+          <p>DownloadMqttUrlRequest: {device.downloadMqttUrlResponseCode ? "200" : "Null"}</p>
         </div>
 
         {/* Status Indicators */}
-        <div className="p-4 border border-white rounded-lg">
-          <h3 className="font-bold mb-2">Status Indicators</h3>
-          <div className="grid grid-cols-4 gap-2">
-            {Array(8)
-              .fill(null)
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    index % 2 === 0 ? "bg-green-500 text-black" : "bg-red-500"
-                  }`}
-                >
-                  {index}
-                </div>
-              ))}
+<div className="p-4 border border-white rounded-lg">
+  <h3 className="font-bold mb-2">Status Indicators</h3>
+  <div className="grid grid-cols-4 gap-2">
+    {device.applianceState
+      ? device.applianceState.split("").map((state, index) => (
+          <div
+            key={index}
+            className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              state === "1" ? "bg-green-500 text-black" : "bg-red-500"
+            }`}
+          >
+            {index}
           </div>
-        </div>
-      </div>
+        ))
+      : Array(8)
+          .fill(null)
+          .map((_, index) => (
+            <div
+              key={index}
+              className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-500"
+            >
+              {index}
+            </div>
+          ))}
+  </div>
+</div>
+</div>
+
 
       {/* User Table */}
       <div className="p-4 border border-white rounded-lg">
