@@ -16,6 +16,7 @@ interface Device {
     powersave: boolean | null;
     username: string | null;
     millis: number | null;
+    signalStrength: number | null;
     deviceUsers: Array<{
       customerId: number | null;
       name: string | null;

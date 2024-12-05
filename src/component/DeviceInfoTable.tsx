@@ -1,4 +1,5 @@
 import Device from "../interface/Device.interface";
+import SignalMeter from "./SignalMeter";
 
 const formatDate = (date:string | null) => {
     if (!date) return "N/A";
@@ -141,6 +142,14 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>
                 {device.online ? "Yes" : "N/A"}
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
+                WSS:
+              </td>
+              <td style={{ padding: "8px", border: "0px solid #ddd" }}>
+                <SignalMeter signalStrength={device.signalStrength} />
               </td>
             </tr>
           </tbody>
