@@ -12,7 +12,7 @@ const formatDate = (date:string | null) => {
         second: '2-digit',
         hour12: true,
     };
-    
+    date += "Z";
     const formatted = new Date(date).toLocaleString('en-GB', options);
     return formatted.replace('/','-').replace('/', '-').toLocaleUpperCase(); // Replacing the comma with "at" for better readability
 }
@@ -113,7 +113,7 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 Boot Time:
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>
-                {device.bootTime ? new Date(device.bootTime).toLocaleString() : "N/A"}
+                {formatDate(device.bootTime)}
               </td>
             </tr>
             <tr>
