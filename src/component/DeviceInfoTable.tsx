@@ -22,7 +22,8 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
   const navigate = useNavigate();
 
   const handleShowSignalStrength = () => {
-    navigate(`/signal-strength/${device.deviceId}`);
+    navigate(`/graphs/${device.deviceId}`);
+    // navigate(`/signal-strength/${device.deviceId}`);
   };
   const handleShowNvsStorage = () => {
     navigate(`/nvstorage/${device.deviceId}`);

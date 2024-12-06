@@ -40,6 +40,7 @@ const NvsStorage: React.FC = () => {
       } else {
         setError('Device not found or no NVS storage data available.');
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError('Error fetching NVS storage data.');
     } finally {
