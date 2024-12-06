@@ -24,6 +24,9 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
   const handleShowSignalStrength = () => {
     navigate(`/signal-strength/${device.deviceId}`);
   };
+  const handleShowNvsStorage = () => {
+    navigate(`/nvstorage/${device.deviceId}`);
+  };
   return (
     <div className="grid grid-cols-3 gap-4 mb-8">
       {/* Device Info */}
@@ -164,6 +167,15 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
             </button>
               </td>
             </tr>
+            <tr>
+              <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
+                NVS:
+              </td>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded mt-2" onClick={handleShowNvsStorage}>
+              Show
+            </button>
+              </tr>
+              
           </tbody>
         </table>
       </div>

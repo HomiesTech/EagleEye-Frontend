@@ -1,80 +1,103 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 
-interface NvsEntry {
-  macAddress: string;
+interface NvsStorage {
   nvs_used: number;
+  nvs_free: number;
+  nvs_total: number;
   time: string;
 }
 
 interface Device {
-  macAddress: string;
   deviceId: number;
-  userId?: number | null;
-  nvsStorage?: NvsEntry[];
+  nvsStorage: NvsStorage[];
 }
 
-interface NvsStorageChartProps {
-    macAddress: string;
-  // The ID of the user whose device data we want to show
-}
+const NvsStorage: React.FC = () => {
+  const { deviceId } = useParams<{ deviceId: string }>();
+  const [storageData, setStorageData] = useState<NvsStorage[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-const NvsStorageChart: React.FC<NvsStorageChartProps> = ({ macAddress }) => {
-  const [data, setData] = useState<NvsEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // Function to fetch NVS storage data based on deviceId
+  const fetchNvsStorage = async (id: string) => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Fetch all devices data
+      const response = await axios.get<Device[]>(`https://service.homenetics.in/eagleeye/devices`);
+      const devices = response.data;
+
+      // Find the specific device by deviceId
+      const device = devices.find((device) => device.deviceId.toString() === id);
+
+      if (device && device.nvsStorage) {
+        setStorageData(device.nvsStorage);
+      } else {
+        setError('Device not found or no NVS storage data available.');
+      }
+    } catch (error) {
+      setError('Error fetching NVS storage data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDevices = async () => {
-      try {
-        const response = await axios.get<Device[]>("https://service.homenetics.in/eagleeye/devices");
-        const devices = response.data;
+    if (deviceId) {
+      fetchNvsStorage(deviceId);
+      const interval = setInterval(() => fetchNvsStorage(deviceId), 60000);
+      return () => clearInterval(interval);
+    }
+  }, [deviceId]);
 
-        // Filter devices by macAddress
-        const userDevices = devices.filter(d => d.macAddress === macAddress);
+  // Chart data configuration
+  const chartData = {
+    labels: storageData.map((data) => new Date(data.time).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })),
+    datasets: [
+      {
+        label: 'NVS Used (Bytes)',
+        data: storageData.map((data) => data.nvs_used),
+        borderColor: '#34D399',
+        backgroundColor: 'rgba(52, 211, 153, 0.2)',
+        fill: true,
+        tension: 0.4,
+      },
+    ],
+  };
 
-        // Find a device with NVS data
-        const deviceWithNvs = userDevices.find(d => d.nvsStorage && d.nvsStorage.length > 0);
-
-        if (!deviceWithNvs || !deviceWithNvs.nvsStorage) {
-          setError(`No device with NVS storage data found for user ${macAddress}.`);
-        } else {
-          setData(deviceWithNvs.nvsStorage);
-        }
-      } catch (err) {
-        console.error(err);
-        setError("Failed to fetch devices data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDevices();
-  }, [macAddress]);
-
-  if (loading) return <div>Loading NVS chart...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        title: { display: true, text: 'Time', color: 'white', font: { size: 16 } },
+        ticks: { color: 'grey', font: { size: 14 } },
+      },
+      y: {
+        title: { display: true, text: 'NVS Used (Bytes)', color: 'white', font: { size: 16 } },
+        ticks: { color: 'grey', font: { size: 14 } },
+        beginAtZero: true,
+      },
+    },
+  };
 
   return (
-    <div style={{ backgroundColor: '#222', color: '#fff', padding: '20px' }}>
-      <h2>NVS Storage Usage for User {macAddress}</h2>
-      <AreaChart width={700} height={300} data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-        <defs>
-          <linearGradient id="nvsGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-          </linearGradient>
-        </defs>
-        <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
-        <XAxis dataKey="time" tick={{ fill: '#fff' }} angle={-45} textAnchor="end" height={60}/>
-        <YAxis dataKey="nvs_used" tick={{ fill: '#fff' }}/>
-        <Tooltip contentStyle={{ backgroundColor: '#333', borderColor: '#555', color: '#fff' }}/>
-        <Legend />
-        <Area type="monotone" dataKey="nvs_used" stroke="#8884d8" fillOpacity={1} fill="url(#nvsGradient)" />
-      </AreaChart>
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">NVS Storage Usage</h1>
+
+      {loading && <p className="text-blue-500">Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      <div className="relative w-full h-96">
+        <Line data={chartData} options={chartOptions} />
+      </div>
     </div>
   );
 };
 
-export default NvsStorageChart;
+export default NvsStorage;

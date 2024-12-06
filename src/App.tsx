@@ -8,6 +8,7 @@ import Devices from "./component/Devices";
 import DevicePage from "./component/DevicePage";
 import Layout from "./layout/Layout"; // Import the new layout
 import SignalStrength from "./component/Graph/WifiStrengthGraph";
+import NvsStorage from "./component/Graph/NvsStorage";
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Route path="/devices" element={<Devices />} />
           <Route path="/device/:id" element={<DevicePage />} />
           <Route path="/signal-strength/:deviceId" element={<SignalStrength/>} />
+          <Route path="/nvstorage/:deviceId" element={<NvsStorage/>} />
         </Routes>
       </Layout>
     </Router>
