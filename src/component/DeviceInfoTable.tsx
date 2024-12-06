@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Device from "../interface/Device.interface";
 import SignalMeter from "./SignalMeter";
 
@@ -18,6 +19,11 @@ const formatDate = (date:string | null) => {
 }
 
 const DeviceInfoTable = ({ device }: { device: Device }) => {
+  const navigate = useNavigate();
+
+  const handleShowSignalStrength = () => {
+    navigate(`/signal-strength/${device.deviceId}`);
+  };
   return (
     <div className="grid grid-cols-3 gap-4 mb-8">
       {/* Device Info */}
@@ -150,6 +156,12 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>
                 <SignalMeter signalStrength={device.signalStrength} />
+                <button
+              className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+              onClick={handleShowSignalStrength}
+            >
+              Show
+            </button>
               </td>
             </tr>
           </tbody>
