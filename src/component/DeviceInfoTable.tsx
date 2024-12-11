@@ -147,7 +147,7 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 Online:
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>
-                {device.online ? "Yes" : "N/A"}
+                {device.online ? "True" : "False"}
               </td>
             </tr>
             <tr>
