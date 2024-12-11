@@ -2,20 +2,20 @@ import { useNavigate } from "react-router-dom";
 import Device from "../interface/Device.interface";
 import SignalMeter from "./SignalMeter";
 
-const formatDate = (date:string | null) => {
-    if (!date) return "N/A";
-    const options:Intl.DateTimeFormatOptions = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-    };
-    date += "Z";
-    const formatted = new Date(date).toLocaleString('en-GB', options);
-    return formatted.replace('/','-').replace('/', '-').toLocaleUpperCase(); // Replacing the comma with "at" for better readability
+const formatDate = (date: string | null) => {
+  if (!date) return "N/A";
+  const options: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  };
+  date += "Z";
+  const formatted = new Date(date).toLocaleString('en-GB', options);
+  return formatted.replace('/', '-').replace('/', '-').toLocaleUpperCase(); // Replacing the comma with "at" for better readability
 }
 
 const DeviceInfoTable = ({ device }: { device: Device }) => {
@@ -133,13 +133,13 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 Active:
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>{
-                device.activeState == 1 ? 
-                    <div className="w-10 h-10 rounded-lg bg-green-500 text-black flex items-center justify-center"></div> 
+                device.activeState == 1 ?
+                  <div className="w-10 h-10 rounded-lg bg-green-500 text-black flex items-center justify-center"></div>
                   : device.activeState == 2 ?
                     <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center"></div>
-                  : device.activeState == 0 ?
-                    <div className="w-10 h-10 rounded-lg bg-red-500 flex items-center justify-center"></div>
-                : "N/A"
+                    : device.activeState == 0 ?
+                      <div className="w-10 h-10 rounded-lg bg-red-500 flex items-center justify-center"></div>
+                      : "N/A"
               }</td>
             </tr>
             <tr>
@@ -187,68 +187,93 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 Graphs:
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-              onClick={handleShowGraphs}
-            >
-              Show
-            </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                  onClick={handleShowGraphs}
+                >
+                  Show
+                </button>
               </td>
-              </tr>
+            </tr>
           </tbody>
         </table>
       </div>
 
       {/* Status Indicators */}
-<div className="p-4 border border-white rounded-lg">
-  <h3 className="font-bold mb-2">Status Indicators</h3>
+      <div className="p-4 border border-white rounded-lg">
+        <h3 className="font-bold mb-2">Status Indicators</h3>
 
-  {/* Grid with two rows */}
-  <div className="grid grid-rows-2 gap-4">
-    
-    {/* First row: Appliance state indicators */}
-    <div className="grid grid-cols-4 gap-2">
-      {device.applianceState
-        ? device.applianceState.split("").map((state, index) => (
-            <div
-              key={index}
-              className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                state === "1" ? "bg-green-500 text-black" : "bg-red-500"
-              }`}
-            >
-              {index}
-            </div>
-          ))
-        : Array(8)
-            .fill(null)
-            .map((_, index) => (
-              <div
-                key={index}
-                className="w-10 h-10 rounded-lg flex items-center justify-center bg-gray-500"
-              >
-                {index}
-              </div>
-            ))}
-    </div>
+        {/* Grid with two rows */}
+        <div className="grid grid-rows-2 gap-4">
 
-    {/* Second row: Another table or status */}
-    <div className="grid grid-cols-2 gap-2 mt-10">
-      {/* Add your content here, for example, additional status indicators or data */}
-      <div className="p-2 border border-gray-300 rounded-lg">
-        <p className="font-bold mb-2">Flash Storage</p>
-        <p>Used: {device.spiffsStorage ? ((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_used)/1024).toFixed(2) + " KB" : "N/A"}</p>
-        <p>Total: {device.spiffsStorage ? ((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_total)/1024).toFixed(2) + " KB" : "N/A"}</p>
-      </div>
-      <div className="p-2 border border-gray-300 rounded-lg">
-        <p className="font-bold mb-2">NVS Entries</p>
-        <p>Total: {device.nvsStorage ? device.nvsStorage[device.nvsStorage.length - 1].nvs_total : "N/A"}</p>
-        <p>Used: {device.nvsStorage ? device.nvsStorage[device.nvsStorage.length - 1].nvs_used : "N/A"}</p>
-        <p>Free: {device.nvsStorage ? device.nvsStorage[device.nvsStorage.length - 1].nvs_free : "N/A"}</p>
-      </div>
-      {/* Add more data or status items as needed */}
-    </div>
+          {/* First row: Appliance state indicators */}
+          <div className="grid grid-cols-4 gap-2">
+            {device.applianceState
+              ? device.applianceState.split("").map((state, index) => (
+                <div
+                  key={index}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center ${state === "1" ? "bg-green-500 text-black" : "bg-red-500"
+                    }`}
+                >
+                  {index}
+                </div>
+              ))
+              : Array(8)
+                .fill(null)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center bg-gray-500"
+                  >
+                    {index}
+                  </div>
+                ))}
+          </div>
+
+          {/* Second row: Another table or status */}
+          <div className="grid grid-cols-2 gap-2 mt-10">
+            {/* Add your content here, for example, additional status indicators or data */}
+            <div className="p-2 border border-gray-300 rounded-lg">
+            <p className="font-bold mb-2">Flash Storage</p>
+    <p>
+      Used:{" "}
+      {device.spiffsStorage && device.spiffsStorage.length > 0
+        ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_used) / 1024).toFixed(2)} KB`
+        : "N/A"}
+    </p>
+    <p>
+      Total:{" "}
+      {device.spiffsStorage && device.spiffsStorage.length > 0
+        ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_total) / 1024).toFixed(2)} KB`
+        : "N/A"}
+    </p>
+  </div>
+
+  {/* NVS Entries */}
+  <div className="p-2 border border-gray-300 rounded-lg">
+    <p className="font-bold mb-2">NVS Entries</p>
+    <p>
+      Total:{" "}
+      {device.nvsStorage && device.nvsStorage.length > 0
+        ? device.nvsStorage[device.nvsStorage.length - 1].nvs_total
+        : "N/A"}
+    </p>
+    <p>
+      Used:{" "}
+      {device.nvsStorage && device.nvsStorage.length > 0
+        ? device.nvsStorage[device.nvsStorage.length - 1].nvs_used
+        : "N/A"}
+    </p>
+    <p>
+      Free:{" "}
+      {device.nvsStorage && device.nvsStorage.length > 0
+        ? device.nvsStorage[device.nvsStorage.length - 1].nvs_free
+        : "N/A"}
+    </p>
   </div>
 </div>
+        </div>
+      </div>
     </div>
   );
 };

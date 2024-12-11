@@ -53,8 +53,8 @@ const DevicePage: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4">
-    
-    <DeviceInfoTable device={device} />
+
+      <DeviceInfoTable device={device} />
 
 
       {/* User Table */}
