@@ -18,6 +18,8 @@ const Devices: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const [filteredDevices,setFilteredDevices]= useState<Device[]>([]);
+
 
   // Fetch devices from API
   useEffect(() => {
@@ -25,6 +27,7 @@ const Devices: React.FC = () => {
       try {
         const response = await axios.get<Device[]>("https://service.homenetics.in/eagleeye/devices");
         setDevices(response.data); // Save data from API to state
+        setFilteredDevices(response.data);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching devices:", err);
@@ -38,13 +41,26 @@ const Devices: React.FC = () => {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    setFilteredDevices(devices.filter((device)=>
+      (device.deviceId || "").toString().includes(event.target.value.toLowerCase())
+    ));
   };
 
-  // Filter devices based on search query
-  const filteredDevices = devices.filter((device) =>
-    (device.deviceId || "").toString().includes(searchQuery.toLowerCase())
-  );
+  
+  const showFilteredDevices = (state: number | null ) => {
+    if (state === null) {
+      setFilteredDevices(devices); //show all devices
+    }else{
+    setFilteredDevices(devices.filter((devices)=>devices.activeState===state));
+    }
+  };
 
+// summary stats
+  const totalDevice=devices.length;
+  const totalActive=devices.filter(device=> device.activeState=== 1).length;
+  const totalInactive=devices.filter(device=> device.activeState===0).length;
+  const totalWaiting=devices.filter(device=> device.activeState===2).length;
+  
   if (loading) {
     return <div className="text-white">Loading devices...</div>;
   }
@@ -66,6 +82,35 @@ const Devices: React.FC = () => {
           onChange={handleSearch}
           className="w-full p-2 bg-gray-900 border border-white rounded text-white"
         />
+      </div>
+      {/*Summary Box */}
+      <div className="mb-4 p-4 bg-gray-800 text-white rounded border-white ">
+        <div className="flex felx warp gap-4">
+          <button className="mb-2 p-2 bg-blue-800 border rounded-2xl border-white "
+          onClick={()=> showFilteredDevices(null)}
+          >
+            Total Devices: {totalDevice}
+          </button>
+          <button className="mb-2 p-2 border rounded-2xl border-white bg-green-700"
+          onClick={()=> showFilteredDevices(1)}
+          >
+            Total Active device: {totalActive}
+             
+              </button>
+      
+        <button className="mb-2 p-2 border rounded-2xl border-white bg-red-700"
+        onClick={()=> showFilteredDevices(0)}
+        >
+          Total Inactive Devices: {totalInactive}
+              
+              </button>
+        <button className="mb-2 p-2 border rounded-2xl border-white bg-yellow-700"
+        onClick={()=> showFilteredDevices(2)}
+        >
+            Waiting Devices: {totalWaiting}
+              </button>
+             
+        </div>
       </div>
 
       {/* Device List */}

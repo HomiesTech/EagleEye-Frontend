@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Device from "../interface/Device.interface";
+import Device from "../../interface/Device.interface"
 import SignalMeter from "./SignalMeter";
 
 const formatDate = (date: string | null) => {

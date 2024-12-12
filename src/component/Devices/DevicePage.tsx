@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import DeviceInfoTable from "./DeviceInfoTable";
-import Device from "../interface/Device.interface";
+import Device from "../../interface/Device.interface";
 
 const DevicePage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get the device ID from URL params
