@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 // Interface definition with required fields
 interface Alarm {
@@ -134,7 +133,7 @@ const Alarms: React.FC = () => {
             onChange={toggleHideFiltered}
             className="mr-2"
           />
-          <label className="text-white">Hide filtered data</label>
+          <label className="text-white">Hide</label>
         </div>
       </div>
 
