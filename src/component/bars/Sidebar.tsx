@@ -32,7 +32,11 @@ export const Sidebar = () => {
             Customers
           </Link>
         </li>
-        <li>Alerts</li>
+        <li>
+          <Link to ="/alarms" className="hover:underline">
+          Alarms
+          </Link>
+          </li>
         <li>Advisory</li>
         <li>History</li>
       </ul>

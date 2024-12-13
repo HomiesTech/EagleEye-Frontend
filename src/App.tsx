@@ -11,6 +11,7 @@ import NvsStorage from "./component/Graph/NvsStorage";
 import DeviceGraphs from "./component/Graph/GraphPage";
 import Customers from "./component/Customer/Customers";
 import Customerpage from "./component/Customer/Customerpage";
+import Alarms from "./component/Alerts/Alerts";
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
       <Layout>
         <Routes>
           <Route path="/add-device" element={<AddDevice />} />
+          <Route path="/alarms" element={<Alarms />} />
           <Route path="/list-device" element={<ListDevice />} />
           <Route path="/customer" element={<Customers />} /> {/*all the customer*/}
           <Route path="/devices" element={<Devices />} />
