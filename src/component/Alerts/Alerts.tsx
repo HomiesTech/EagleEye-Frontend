@@ -108,13 +108,13 @@ const Alarms: React.FC = () => {
   const getRowClass = (severity: number) => {
     switch (severity) {
       case 1:
-        return "bg-gradient-to-r from-blue-100 to-blue-500";
+        return "bg-gradient-to-r from-blue-100 to-blue-400";
       case 2:
-        return "bg-gradient-to-r from-green-100 to-green-500";
+        return "bg-gradient-to-r from-green-100 to-green-400";
       case 3:
-        return "bg-gradient-to-r from-yellow-100 to-yellow-500";
+        return "bg-gradient-to-r from-yellow-100 to-yellow-400";
       case 4:
-        return "bg-gradient-to-r from-red-100 to-red-500";
+        return "bg-gradient-to-r from-red-100 to-red-400";
       default:
         return "";
     }
@@ -183,14 +183,14 @@ const Alarms: React.FC = () => {
       {/* Alarm List */}
       <table className="w-full text-left border border-white">
         <thead>
-          <tr className="bg-gray-700 text-white">
-            <th className="p-2 border border-white"></th>
-            <th className="p-2 border border-white">Entity</th>
-            <th className="p-2 border border-white">Entity ID</th>
-            <th className="p-2 border border-white">Key</th>
-            <th className="p-2 border border-white">Status</th>
-            <th className="p-2 border border-white">Start Time</th>
-            <th className="p-2 border border-white">Duration</th>
+          <tr className="bg-gray-900 text-white">
+            <th className="p-2 border text-center border-white"></th>
+            <th className="p-2 border text-center border-white">Entity</th>
+            <th className="p-2 border text-center border-white">Entity ID</th>
+            <th className="p-2 border text-center border-white">Key</th>
+            <th className="p-2 border text-center border-white">Status</th>
+            <th className="p-2 border text-center border-white">Start Time</th>
+            <th className="p-2 border text-center border-white">Duration</th>
           </tr>
         </thead>
         <tbody>
@@ -198,7 +198,7 @@ const Alarms: React.FC = () => {
             ? filteredAlarms.sort((a, b) => b.severity - a.severity)
             : alarms.filter((alarm) => !filteredAlarms.includes(alarm)).sort((a, b) => b.severity - a.severity)
           ).map((alarm, index) => (
-            <tr key={index} className={`${getRowClass(alarm.severity)} text-black`}>
+            <tr key={index} className={`${getRowClass(alarm.severity)} text-black font-semibold`}>
               <td className="p-2 border border-white">{renderSeverityIcon(alarm.severity)}</td>
               <td className="p-2 border border-white">{alarm.entityType || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.entityId || "N/A"}</td>
