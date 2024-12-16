@@ -1,4 +1,5 @@
 interface Device {
+    [x: string]: any;
     deviceId: number;
     ssid: string| null;
     downloadMqttUrlResponseCode:number;

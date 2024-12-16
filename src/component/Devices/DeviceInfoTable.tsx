@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Device from "../../interface/Device.interface"
 import SignalMeter from "./SignalMeter";
 
@@ -20,7 +20,7 @@ const formatDate = (date: string | null) => {
 
 const DeviceInfoTable = ({ device }: { device: Device }) => {
   const navigate = useNavigate();
-
+  
   const handleShowGraphs = () => {
     navigate(`/graphs/${device.deviceId}`);
   };
@@ -105,6 +105,23 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>{device.millis}</td>
             </tr>
+           
+           
+           {/* alarm button  */}
+           <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
+                Alerts:
+              </td>
+           <td >
+           <Link to={`/alarms`} >
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        
+        >
+          Show
+        </button>
+        </Link>
+       </td>
+            
           </tbody>
         </table>
       </div>

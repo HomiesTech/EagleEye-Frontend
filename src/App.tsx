@@ -20,6 +20,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/add-device" element={<AddDevice />} />
           <Route path="/alarms" element={<Alarms />} />
+          <Route path="/entity/:id" element={<DevicePage />} /> {/*open devicepage with entityid */}
           <Route path="/list-device" element={<ListDevice />} />
           <Route path="/customer" element={<Customers />} /> {/*all the customer*/}
           <Route path="/devices" element={<Devices />} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 // Interface definition with required fields
 interface Alarm {
@@ -83,7 +84,7 @@ const Alarms: React.FC = () => {
     return [
       days > 0 ? `${days}d` : "",
       hours > 0 ? `${hours}h` : "",
-      minutes > 0 ? `${minutes}m` : "",
+      minutes > 0 ? `${minutes}m` : "0 m",
       seconds > 0 ? `${seconds}s` : "",
     ]
       .filter(Boolean)
@@ -143,8 +144,8 @@ const Alarms: React.FC = () => {
             >
               <option value="key">Key</option>
               <option value="status">Status</option>
-              <option value="entityType">Entity Type</option>
-              <option value="entityId">Entity ID</option>
+              <option value="entityType">Name</option>
+              <option value="entityId">ID</option>
             </select>
             <input
               type="text"
@@ -185,8 +186,8 @@ const Alarms: React.FC = () => {
         <thead>
           <tr className="bg-gray-900 text-white">
             <th className="p-2 border text-center border-white"></th>
-            <th className="p-2 border text-center border-white">Entity</th>
-            <th className="p-2 border text-center border-white">Entity ID</th>
+            <th className="p-2 border text-center border-white">Name</th>
+            <th className="p-2 border text-center border-white">ID</th>
             <th className="p-2 border text-center border-white">Key</th>
             <th className="p-2 border text-center border-white">Status</th>
             <th className="p-2 border text-center border-white">Start Time</th>
@@ -201,7 +202,17 @@ const Alarms: React.FC = () => {
             <tr key={index} className={`${getRowClass(alarm.severity)} text-black font-semibold`}>
               <td className="p-2 border border-white">{renderSeverityIcon(alarm.severity)}</td>
               <td className="p-2 border border-white">{alarm.entityType || "N/A"}</td>
-              <td className="p-2 border border-white">{alarm.entityId || "N/A"}</td>
+              <td className="p-2 border border-white">
+                {alarm.entityId ?(
+                  <Link
+                  to={`/entity/${alarm.entityId}`}
+                   className=" text-black hover:text-blue-700">
+                    {alarm.entityId}
+                   </Link>
+                ) :(
+                   "N/A"
+                   )}
+                </td>
               <td className="p-2 border border-white">{alarm.key || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.status || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.startTime ? new Date(alarm.startTime + "Z").toLocaleString() : "N/A"}</td>

@@ -37,6 +37,11 @@ export const Sidebar = () => {
           Alarms
           </Link>
           </li>
+          <li>
+            <Link to= "/commands" className='hover:underline'>
+            Commands
+            </Link>
+          </li>
         <li>Advisory</li>
         <li>History</li>
       </ul>
