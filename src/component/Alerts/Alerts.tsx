@@ -213,7 +213,7 @@ const Alarms: React.FC = () => {
               <td className="p-2 border border-white">
                 {alarm.entityId ? (
                   <Link
-                    to={`/entity/${alarm.entityId}`}
+                    to={`/device/${alarm.entityId}`}
                     className="text-black underline hover:text-white"
                   >
                     {`${alarm.entityType || "N/A"}=${alarm.entityId}`}
