@@ -66,13 +66,23 @@ const Alarms: React.FC = () => {
       return severityOrder.indexOf(b.severity) - severityOrder.indexOf(a.severity);
     });
     setFilteredAlarms(
-      sortedAlarms.filter((alarm) =>
-        ((alarm[field as keyof Alarm] || "").toString().toLowerCase().includes(key.toLowerCase()) || key === "") &&
-        ((alarm.status || "").toLowerCase().includes(status.toLowerCase()) || status === "")
-      )
+      sortedAlarms.filter((alarm) => {
+        const fieldValue = alarm[field as keyof Alarm];
+        const statusValue = alarm.status || "";
+  
+        // Exact match for entityId (numeric search)
+        if (field === "entityId" && key !== "") {
+          return fieldValue === parseInt(key, 10);
+        }
+  
+        // Default partial match for other fields
+        return (
+          ((fieldValue || "").toString().toLowerCase().includes(key.toLowerCase()) || key === "") &&
+          (statusValue.toLowerCase().includes(status.toLowerCase()) || status === "")
+        );
+      })
     );
   };
-
   const formatDuration = (duration: number | null): string => {
     if (duration === null || duration < 0) return "N/A";
 
@@ -85,7 +95,7 @@ const Alarms: React.FC = () => {
       days > 0 ? `${days}d` : "",
       hours > 0 ? `${hours}h` : "",
       minutes > 0 ? `${minutes}m` : "0 m",
-      seconds > 0 ? `${seconds}s` : "",
+      minutes > 0 ? (seconds > 0 ?`${seconds}s` : ""):"",
     ]
       .filter(Boolean)
       .join(" ");
@@ -100,7 +110,7 @@ const Alarms: React.FC = () => {
       case 3:
         return <span className="text-yellow-500">⚠ </span>; // Yellow warning triangle
       case 4:
-        return <span className="text-red-500">&#128128;</span>; // Red exclamation mark
+        return <span className="text-red-500 text-2xl">&#8856;</span>; // Red exclamation mark
       default:
         return <span className="text-gray-500">Unknown</span>;
     }
@@ -178,7 +188,7 @@ const Alarms: React.FC = () => {
         <div className="text-blue-400">Ⓘ - Info</div>
         <div className="text-green-500">💚 - OK</div>
         <div className="text-yellow-300">⚠ - Warn</div>
-        <div className="text-red-500">💀 - Error</div>
+        <div className="text-red-500"> ⊘ - Error</div>
       </div>
 
       {/* Alarm List */}
@@ -187,7 +197,6 @@ const Alarms: React.FC = () => {
           <tr className="bg-gray-900 text-white">
             <th className="p-2 border text-center border-white"></th>
             <th className="p-2 border text-center border-white">Name</th>
-            <th className="p-2 border text-center border-white">ID</th>
             <th className="p-2 border text-center border-white">Key</th>
             <th className="p-2 border text-center border-white">Status</th>
             <th className="p-2 border text-center border-white">Start Time</th>
@@ -201,17 +210,17 @@ const Alarms: React.FC = () => {
           ).map((alarm, index) => (
             <tr key={index} className={`${getRowClass(alarm.severity)} text-black font-semibold`}>
               <td className="p-2 border border-white">{renderSeverityIcon(alarm.severity)}</td>
-              <td className="p-2 border border-white">{alarm.entityType || "N/A"}</td>
               <td className="p-2 border border-white">
-                {alarm.entityId ?(
+                {alarm.entityId ? (
                   <Link
-                  to={`/entity/${alarm.entityId}`}
-                   className=" text-black hover:text-blue-700">
-                    {alarm.entityId}
-                   </Link>
-                ) :(
-                   "N/A"
-                   )}
+                    to={`/entity/${alarm.entityId}`}
+                    className="text-black underline hover:text-white"
+                  >
+                    {`${alarm.entityType || "N/A"}=${alarm.entityId}`}
+                  </Link>
+                ) : (
+                  "N/A"
+                )}
                 </td>
               <td className="p-2 border border-white">{alarm.key || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.status || "N/A"}</td>
@@ -220,9 +229,12 @@ const Alarms: React.FC = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>``
     </div>
   );
 };
 
 export default Alarms;
+              
+              
+              
