@@ -11,8 +11,8 @@ interface Alarm {
   status: string | null;
   startTime: string | null;
   duration: number | null;
-  details?: string;
-  lastUpdateTime?: string;
+  detail?: string;
+  lastUpdatedTime?: string;
 }
 
 const Alarms: React.FC = () => {
@@ -46,9 +46,9 @@ const Alarms: React.FC = () => {
     fetchAlarms();
   }, []);
 
-const togglePopup = (alarm:Alarm) => {
-  setPopupAlarm(alarm);
-};
+// const togglePopup = (alarm:Alarm) => {
+//   setPopupAlarm(alarm);
+// };
 const closePopup = () => {
   setPopupAlarm(null);
 };
@@ -101,7 +101,7 @@ const closePopup = () => {
         return (
           ((fieldValue || "").toString().toLowerCase().includes(key.toLowerCase()) || key === "") &&
           (statusValue.toLowerCase().includes(status.toLowerCase()) || status === "")
-        );
+        );  
       })
     );
   };
@@ -251,7 +251,7 @@ const closePopup = () => {
               <td className="p-2 border border-white">{alarm.startTime ? new Date(alarm.startTime + "Z").toLocaleString() : "N/A"}</td>
               <td className="p-2 border border-white">{formatDuration(alarm.duration)}</td>
             <td className="p-2 border border-white">
-              <button onClick={() => togglePopup(alarm)} className="text-blue-500 hover:text-blue-700">
+              <button onClick={() => {console.log(alarm);setPopupAlarm(alarm);}} className="text-blue-500 hover:text-blue-700">
               &#128065;
 
               </button>
@@ -265,8 +265,8 @@ const closePopup = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-black/85 p-6 rounded-xl shadow-lg relative">
             <h2 className="text-lg font-bold mb-4">Alarm Details</h2>
-            <p><strong>Detail:</strong> {popupAlarm.details || "N/A"}</p>
-            <p><strong>Last Update Time:</strong> {popupAlarm.lastUpdateTime || "N/A"}</p>
+            <p><strong>Detail:</strong> {popupAlarm.detail || "N/A"}</p>
+            <p><strong>Last Update Time:</strong> {popupAlarm.lastUpdatedTime ? new Date(popupAlarm.lastUpdatedTime + "Z").toLocaleString() : "N/A" || "N/A"}</p>
             <button
               onClick={closePopup}
               className="absolute top-2 right-2 text-white hover:text-red-500"
