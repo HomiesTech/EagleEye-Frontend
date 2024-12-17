@@ -11,6 +11,8 @@ interface Alarm {
   status: string | null;
   startTime: string | null;
   duration: number | null;
+  details?: string;
+  lastUpdateTime?: string;
 }
 
 const Alarms: React.FC = () => {
@@ -24,6 +26,7 @@ const Alarms: React.FC = () => {
   const [hideFiltered, setHideFiltered] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
   const entityId = searchParams.get("entityId");
+  const [popupAlarm, setPopupAlarm] = useState<Alarm | null>(null); // State for popup
 
   // Fetch alarms from API
   useEffect(() => {
@@ -42,6 +45,15 @@ const Alarms: React.FC = () => {
 
     fetchAlarms();
   }, []);
+
+const togglePopup = (alarm:Alarm) => {
+  setPopupAlarm(alarm);
+};
+const closePopup = () => {
+  setPopupAlarm(null);
+};
+
+
 
   // Fetch and filter alarms based on entityId if passed in query params
   useEffect(() => {
@@ -149,6 +161,7 @@ const Alarms: React.FC = () => {
     return <div className="text-red-500">{error}</div>;
   }
 
+
   return (
     <div>
       <h1 className="text-lg font-bold mb-4">Alarms</h1>
@@ -211,6 +224,7 @@ const Alarms: React.FC = () => {
             <th className="p-2 border text-center border-white">Status</th>
             <th className="p-2 border text-center border-white">Start Time</th>
             <th className="p-2 border text-center border-white">Duration</th>
+            <th className="p-2 border text-center border-white">Explore</th>
           </tr>
         </thead>
         <tbody>
@@ -236,10 +250,32 @@ const Alarms: React.FC = () => {
               <td className="p-2 border border-white">{alarm.status || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.startTime ? new Date(alarm.startTime + "Z").toLocaleString() : "N/A"}</td>
               <td className="p-2 border border-white">{formatDuration(alarm.duration)}</td>
+            <td className="p-2 border border-white">
+              <button onClick={() => togglePopup(alarm)} className="text-blue-500 hover:text-blue-700">
+              &#128065;
+
+              </button>
+            </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {/* Popup */}
+      {popupAlarm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-black/85 p-6 rounded-xl shadow-lg relative">
+            <h2 className="text-lg font-bold mb-4">Alarm Details</h2>
+            <p><strong>Detail:</strong> {popupAlarm.details || "N/A"}</p>
+            <p><strong>Last Update Time:</strong> {popupAlarm.lastUpdateTime || "N/A"}</p>
+            <button
+              onClick={closePopup}
+              className="absolute top-2 right-2 text-white hover:text-red-500"
+            >
+              &times; {/* Close icon */}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
