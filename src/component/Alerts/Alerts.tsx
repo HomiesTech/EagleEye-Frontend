@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 // Interface definition with required fields
 interface Alarm {
@@ -22,6 +22,8 @@ const Alarms: React.FC = () => {
   const [filterKey, setFilterKey] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<string>("");
   const [hideFiltered, setHideFiltered] = useState<boolean>(false);
+  const [searchParams] = useSearchParams();
+  const entityId = searchParams.get("entityId");
 
   // Fetch alarms from API
   useEffect(() => {
@@ -40,6 +42,14 @@ const Alarms: React.FC = () => {
 
     fetchAlarms();
   }, []);
+
+  // Fetch and filter alarms based on entityId if passed in query params
+  useEffect(() => {
+    if (entityId) {
+      const filtered = alarms.filter((alarm) => alarm.entityId === parseInt(entityId));
+      setFilteredAlarms(filtered);
+    }
+  }, [entityId, alarms]);
 
   const handleFilterKey = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterKey(event.target.value);
@@ -69,12 +79,12 @@ const Alarms: React.FC = () => {
       sortedAlarms.filter((alarm) => {
         const fieldValue = alarm[field as keyof Alarm];
         const statusValue = alarm.status || "";
-  
+
         // Exact match for entityId (numeric search)
         if (field === "entityId" && key !== "") {
           return fieldValue === parseInt(key, 10);
         }
-  
+
         // Default partial match for other fields
         return (
           ((fieldValue || "").toString().toLowerCase().includes(key.toLowerCase()) || key === "") &&
@@ -95,7 +105,7 @@ const Alarms: React.FC = () => {
       days > 0 ? `${days}d` : "",
       hours > 0 ? `${hours}h` : "",
       minutes > 0 ? `${minutes}m` : "0 m",
-      minutes > 0 ? (seconds > 0 ?`${seconds}s` : ""):"",
+      minutes > 0 ? (seconds > 0 ? `${seconds}s` : "") : "",
     ]
       .filter(Boolean)
       .join(" ");
@@ -221,7 +231,7 @@ const Alarms: React.FC = () => {
                 ) : (
                   "N/A"
                 )}
-                </td>
+              </td>
               <td className="p-2 border border-white">{alarm.key || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.status || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.startTime ? new Date(alarm.startTime + "Z").toLocaleString() : "N/A"}</td>
@@ -229,12 +239,9 @@ const Alarms: React.FC = () => {
             </tr>
           ))}
         </tbody>
-      </table>``
+      </table>
     </div>
   );
 };
 
 export default Alarms;
-              
-              
-              

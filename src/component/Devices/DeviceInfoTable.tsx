@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Device from "../../interface/Device.interface"
 import SignalMeter from "./SignalMeter";
 
@@ -20,9 +20,13 @@ const formatDate = (date: string | null) => {
 
 const DeviceInfoTable = ({ device }: { device: Device }) => {
   const navigate = useNavigate();
-  
+
+  const handleShowAlarms = () => {
+    navigate(`/monitor/alarms?entityId=${device.deviceId}`);
+  };
+
   const handleShowGraphs = () => {
-    navigate(`/graphs/${device.deviceId}`);
+    navigate(`/monitor/graphs/${device.deviceId}`);
   };
   return (
     <div className="grid grid-cols-3 gap-4 mb-8">
@@ -105,26 +109,23 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>{device.millis}</td>
             </tr>
-           
-           
-           {/* alarm button  */}
-           <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
-                Alerts:
-              </td>
-           <td >
-           <Link to={`/alarms`} >
-        <button
-          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
-        
-        >
-        alarm
-        </button>
-        </Link>
-       </td>
-            
+
+
+            {/* alarm button  */}
+            <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
+              Alerts:
+            </td>
+            <td style={{ padding: "8px", border: "0px solid #ddd" }}>
+              <button
+                onClick={handleShowAlarms}
+                className="bg-red-500 text-white px-4 py-2 rounded mt-2">
+                Alarm
+              </button>
+            </td>
           </tbody>
         </table>
       </div>
+
 
       {/* Connection Info */}
       <div className="p-4 border border-white rounded-lg">
@@ -251,44 +252,44 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
           <div className="grid grid-cols-2 gap-2 mt-10">
             {/* Add your content here, for example, additional status indicators or data */}
             <div className="p-2 border border-gray-300 rounded-lg">
-            <p className="font-bold mb-2">Flash Storage</p>
-    <p>
-      Used:{" "}
-      {device.spiffsStorage && device.spiffsStorage.length > 0
-        ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_used) / 1024).toFixed(2)} KB`
-        : "N/A"}
-    </p>
-    <p>
-      Total:{" "}
-      {device.spiffsStorage && device.spiffsStorage.length > 0
-        ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_total) / 1024).toFixed(2)} KB`
-        : "N/A"}
-    </p>
-  </div>
+              <p className="font-bold mb-2">Flash Storage</p>
+              <p>
+                Used:{" "}
+                {device.spiffsStorage && device.spiffsStorage.length > 0
+                  ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_used) / 1024).toFixed(2)} KB`
+                  : "N/A"}
+              </p>
+              <p>
+                Total:{" "}
+                {device.spiffsStorage && device.spiffsStorage.length > 0
+                  ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_total) / 1024).toFixed(2)} KB`
+                  : "N/A"}
+              </p>
+            </div>
 
-  {/* NVS Entries */}
-  <div className="p-2 border border-gray-300 rounded-lg">
-    <p className="font-bold mb-2">NVS Entries</p>
-    <p>
-      Total:{" "}
-      {device.nvsStorage && device.nvsStorage.length > 0
-        ? device.nvsStorage[device.nvsStorage.length - 1].nvs_total
-        : "N/A"}
-    </p>
-    <p>
-      Used:{" "}
-      {device.nvsStorage && device.nvsStorage.length > 0
-        ? device.nvsStorage[device.nvsStorage.length - 1].nvs_used
-        : "N/A"}
-    </p>
-    <p>
-      Free:{" "}
-      {device.nvsStorage && device.nvsStorage.length > 0
-        ? device.nvsStorage[device.nvsStorage.length - 1].nvs_free
-        : "N/A"}
-    </p>
-  </div>
-</div>
+            {/* NVS Entries */}
+            <div className="p-2 border border-gray-300 rounded-lg">
+              <p className="font-bold mb-2">NVS Entries</p>
+              <p>
+                Total:{" "}
+                {device.nvsStorage && device.nvsStorage.length > 0
+                  ? device.nvsStorage[device.nvsStorage.length - 1].nvs_total
+                  : "N/A"}
+              </p>
+              <p>
+                Used:{" "}
+                {device.nvsStorage && device.nvsStorage.length > 0
+                  ? device.nvsStorage[device.nvsStorage.length - 1].nvs_used
+                  : "N/A"}
+              </p>
+              <p>
+                Free:{" "}
+                {device.nvsStorage && device.nvsStorage.length > 0
+                  ? device.nvsStorage[device.nvsStorage.length - 1].nvs_free
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -83,7 +83,7 @@ const Customers: React.FC = () => {
           {filteredCustomers.map((customer) => (
             <tr key={customer.id} className="text-white">
               <td className="p-2 border border-white">
-                <Link to={`/customer/${customer.id}`} className="text-white-500 hover:underline">
+                <Link to={`/monitor/customer/${customer.id}`} className="text-white-500 hover:underline">
                   {customer.id}
                 </Link>
               </td>

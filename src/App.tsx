@@ -18,17 +18,17 @@ const App: React.FC = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/add-device" element={<AddDevice />} />
-          <Route path="/alarms" element={<Alarms />} />
-          <Route path="/entity/:id" element={<DevicePage />} /> {/*open devicepage with entityid */}
-          <Route path="/list-device" element={<ListDevice />} />
-          <Route path="/customer" element={<Customers />} /> {/*all the customer*/}
-          <Route path="/devices" element={<Devices />} />
-          <Route path="/customer/:id" element={<Customerpage />} />{/*single customer page */}
-          <Route path="/device/:id" element={<DevicePage />} />
-          <Route path="/signal-strength/:deviceId" element={<SignalStrength/>} />
-          <Route path="/nvstorage/:deviceId" element={<NvsStorage/>} />
-          <Route path="/graphs/:deviceId" element={<DeviceGraphs />} />
+          <Route path="/monitor/add-device" element={<AddDevice />} />
+          <Route path="/monitor/alarms" element={<Alarms />} />
+          <Route path="/monitor/entity/:id" element={<DevicePage />} /> {/*open devicepage with entityid */}
+          <Route path="/monitor/list-device" element={<ListDevice />} />
+          <Route path="/monitor/customer" element={<Customers />} /> {/*all the customer*/}
+          <Route path="/monitor/devices" element={<Devices />} />
+          <Route path="/monitor/customer/:id" element={<Customerpage />} />{/*single customer page */}
+          <Route path="/monitor/device/:id" element={<DevicePage />} />
+          <Route path="/monitor/signal-strength/:deviceId" element={<SignalStrength/>} />
+          <Route path="/monitor/nvstorage/:deviceId" element={<NvsStorage/>} />
+          <Route path="/monitor/graphs/:deviceId" element={<DeviceGraphs />} />
         </Routes>
       </Layout>
     </Router>

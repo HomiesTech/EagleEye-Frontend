@@ -129,14 +129,14 @@ const Devices: React.FC = () => {
           {filteredDevices.map((device) => (
             <tr key={device.deviceId} className="text-white">
               <td className="p-2 border border-white">
-                <Link to={`/device/${device.deviceId}`} className="text-white-500 hover:underline">
+                <Link to={`/monitor/device/${device.deviceId}`} className="text-white-500 hover:underline">
                   {device.deviceId}
                 </Link>
 
               </td>
               <td className="p-2 border border-white">{device.ssid || "N/A"}</td>
               <td className="p-2 border border-white">
-                <Link to={`/device/${device.deviceId}`} className="text-white-500 hover:underline">
+                <Link to={`/monitor/device/${device.deviceId}`} className="text-white-500 hover:underline">
                   {device.macAddress || "N/A"}
                 </Link>
 

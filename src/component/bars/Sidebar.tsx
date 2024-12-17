@@ -8,12 +8,12 @@ export const Sidebar = () => {
       <div className="font-bold mb-2">Device Management</div>
       <ul className="space-y-2">
         <li>
-          <Link to="/add-device" className="hover:underline">
+          <Link to="/monitor/add-device" className="hover:underline">
             Add Device
           </Link>
         </li>
         <li>
-          <Link to="/list-device" className="hover:underline">
+          <Link to="/monitor/list-device" className="hover:underline">
             List Device
           </Link>
         </li>
@@ -23,22 +23,22 @@ export const Sidebar = () => {
       <div className="font-bold mb-2">Device Monitoring</div>
       <ul className="space-y-2">
         <li>
-          <Link to="/devices" className="hover:underline">
+          <Link to="/monitor/devices" className="hover:underline">
             Devices
           </Link>
         </li>
         <li>
-          <Link to="/customer" className="hover:underline">
+          <Link to="/monitor/customer" className="hover:underline">
             Customers
           </Link>
         </li>
         <li>
-          <Link to ="/alarms" className="hover:underline">
+          <Link to ="/monitor/alarms" className="hover:underline">
           Alarms
           </Link>
           </li>
           <li>
-            <Link to= "/commands" className='hover:underline'>
+            <Link to= "/monitor/commands" className='hover:underline'>
             Commands
             </Link>
           </li>
