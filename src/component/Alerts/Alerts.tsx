@@ -266,7 +266,7 @@ const closePopup = () => {
           <div className="bg-black/85 p-6 rounded-xl shadow-lg relative">
             <h2 className="text-lg font-bold mb-4">Alarm Details</h2>
             <p><strong>Detail:</strong> {popupAlarm.detail || "N/A"}</p>
-            <p><strong>Last Update Time:</strong> {popupAlarm.lastUpdatedTime ? new Date(popupAlarm.lastUpdatedTime + "Z").toLocaleString() : "N/A" || "N/A"}</p>
+            <p><strong>Last Update Time:</strong> {popupAlarm.lastUpdatedTime ? new Date(popupAlarm.lastUpdatedTime + "Z").toLocaleString() :  "N/A"}</p>
             <button
               onClick={closePopup}
               className="absolute top-2 right-2 text-white hover:text-red-500"
