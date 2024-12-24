@@ -3,27 +3,34 @@ import axios from "axios";
 
 // Define Device interface
 interface Device {
-  deviceId: number;
-  ssid: string | null;
+  devId: number;
+  userId: number;
   macAddress: string | null;
-  ipAddress: string | null;
-  activeState: number;
-  codeVersion: string | null;
+  createdAt: string;
+  updatedAt: string;
+  lastConnectionAt: string | null;
 }
 
 const DeviceTable: React.FC = () => {
   const [devices, setDevices] = useState<Device[]>([]); // API device list
   const [searchQuery, setSearchQuery] = useState(""); // Search query
-  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null); // Selected device for detailed view
-  const [password, setPassword] = useState(""); // Password for popup
+  const [page, setPage] = useState(1); // Current page number
+  const [pageSize, setPageSize] = useState(2); // Page size
+  const [totalPages, setTotalPages] = useState(0); // Total pages
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const [notification, setNotification] = useState<string | null>(null); // Notification
 
   useEffect(() => {
     const fetchDevices = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const response = await axios.get<Device[]>("https://service.homenetics.in/eagleeye/devices");
-        setDevices(response.data); // Set the devices from API
+        const response = await axios.get(
+          `https://service.homenetics.in/database/api/devices?page=${page}&pageSize=${pageSize}`
+        );
+        setDevices(response.data.devices); // Set the devices from API
+        setTotalPages(response.data.totalPages); // Set total pages
         setLoading(false);
       } catch (err) {
         console.error("Error fetching devices:", err);
@@ -33,32 +40,48 @@ const DeviceTable: React.FC = () => {
     };
 
     fetchDevices();
-  }, []);
+  }, [page, pageSize]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
-  const handleView = (device: Device) => {
-    setSelectedDevice(device);
-  };
-
-  const handlePasswordSubmit = () => {
-    if (password === "correctPassword") {
-      alert(`Decrypted data for device: ${JSON.stringify(selectedDevice, null, 2)}`);
-      setSelectedDevice(null);
-    } else {
-      alert("Incorrect password.");
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
     }
   };
 
-  const handleDelete = (id: number) => {
-    setDevices(devices.filter((device) => device.deviceId !== id));
+  const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPage(1); // Reset to the first page
   };
 
-  // Filter devices based on search query
+  const handleDelete = async (deviceId: number) => {
+    const userInput = prompt(
+      `To confirm deletion, type the word "delete". This action cannot be undone.`
+    );
+
+    if (userInput?.toLowerCase() === "delete") {
+      try {
+        await axios.delete<{ message: string }>(
+          `https://service.homenetics.in/database/api/devices/${deviceId}`
+        );
+        setDevices((prevDevices) =>
+          prevDevices.filter((device) => device.devId !== deviceId)
+        );
+        setNotification("Device deleted successfully.");
+      } catch (error) {
+        console.error("Error deleting device:", error);
+        setNotification("Error deleting the device.");
+      }
+    } else {
+      setNotification("Deletion canceled.");
+    }
+  };
+
   const filteredDevices = devices.filter((device) =>
-    device.deviceId.toString().includes(searchQuery.toLowerCase())
+    device.devId.toString().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
@@ -73,6 +96,9 @@ const DeviceTable: React.FC = () => {
     <div>
       <h1 className="text-lg font-bold mb-4">Devices</h1>
 
+      {/* Notification */}
+      {notification && <div className="mb-4 text-green-500">{notification}</div>}
+
       {/* Search Bar */}
       <div className="mb-4">
         <input
@@ -83,10 +109,8 @@ const DeviceTable: React.FC = () => {
           className="w-full p-2 bg-gray-900 border border-white rounded text-white"
         />
       </div>
-      {/*total devices info */}
-      <div className="mb-4 text-white font-bold">
-        Total Devices: {filteredDevices.length}
-         </div>
+      {/* Total devices info */}
+      <div className="mb-4 text-white font-bold">Total Devices: {filteredDevices.length}</div>
 
       {/* Device Table */}
       <table className="w-full text-left border border-white">
@@ -94,28 +118,24 @@ const DeviceTable: React.FC = () => {
           <tr className="bg-gray-700 text-white">
             <th className="p-2 border border-white">S.NO</th>
             <th className="p-2 border border-white">ID</th>
-            <th className="p-2 border border-white">Name</th>
-            <th className="p-2 border border-white">Mac Address</th>
-            <th className="p-2 border border-white">Controls</th>
+            <th className="p-2 border border-white">MAC Address</th>
+            <th className="p-2 border border-white">Created At</th>
+            <th className="p-2 border border-white">Updated At</th>
+            <th className="p-2 border border-white">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredDevices.map((device, index) => (
-            <tr key={device.deviceId} className="text-white">
-              <td className="p-2 border border-white">{index + 1}</td> {/* S.No Column */}
-              <td className="p-2 border border-white">{device.deviceId}</td>
-              <td className="p-2 border border-white">{device.ssid || "N/A"}</td>
+            <tr key={device.devId} className="text-white">
+              <td className="p-2 border border-white">{index + 1 + (page - 1) * pageSize}</td>
+              <td className="p-2 border border-white">{device.devId}</td>
               <td className="p-2 border border-white">{device.macAddress || "N/A"}</td>
+              <td className="p-2 border border-white">{new Date(device.createdAt).toLocaleString()}</td>
+              <td className="p-2 border border-white">{new Date(device.updatedAt).toLocaleString()}</td>
               <td className="p-2 border border-white">
                 <button
-                  onClick={() => handleView(device)}
-                  className="px-2 py-1 bg-blue-600 rounded hover:bg-blue-500"
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => handleDelete(device.deviceId)}
-                  className="ml-2 px-2 py-1 bg-red-600 rounded hover:bg-red-500"
+                  onClick={() => handleDelete(device.devId)}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
                   Delete
                 </button>
@@ -125,51 +145,58 @@ const DeviceTable: React.FC = () => {
         </tbody>
       </table>
 
-      {/* View Popup */}
-      {selectedDevice && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="p-6 bg-gray-900 text-white border border-white rounded w-1/2">
-            <h2 className="text-lg font-bold mb-4">Controls (View)</h2>
-            <div>
-              <p>DevId: {selectedDevice.deviceId}</p>
-              <p>MAC: {selectedDevice.macAddress}</p>
-              <p>SSID: {selectedDevice.ssid}</p>
-              <p>Password: &lt;encrypted&gt;</p>
-              <p>Dev Private Key: &lt;encrypted&gt;</p>
-              <p>Dev Public Key: &lt;encrypted&gt;</p>
-              <p>Server Private Key: &lt;encrypted&gt;</p>
-              <p>Server Public Key: &lt;encrypted&gt;</p>
-              <p>Created At: N/A</p>
-              <p>Created By: N/A</p>
-            </div>
-            <div className="mt-4">
-              <input
-                type="password"
-                placeholder="Enter Password"
-                className="p-2 bg-gray-800 border border-white rounded text-white w-full"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                onClick={handlePasswordSubmit}
-                className="mt-4 px-4 py-2 bg-green-600 rounded hover:bg-green-500"
-              >
-                Submit
-              </button>
-            </div>
-            <button
-              onClick={() => setSelectedDevice(null)}
-              className="mt-4 px-4 py-2 bg-red-600 rounded hover:bg-red-500"
-            >
-              Close
-            </button>
-          </div>
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between mt-4">
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+          className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <div>
+          Page
+          <select
+            value={page}
+            onChange={(e) => handlePageChange(parseInt(e.target.value, 10))}
+            className="ml-2 p-2 bg-gray-800 border border-white rounded text-white"
+          >
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <option key={pageNum} value={pageNum}>
+                {pageNum}
+              </option>
+            ))}
+          </select>
+          of {totalPages}
         </div>
-      )}
+
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === totalPages}
+          className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Page Size Selector */}
+      <div className="mt-4">
+        <label className="text-white">Page Size: </label>
+        <select
+          value={pageSize}
+          onChange={handlePageSizeChange}
+          className="ml-2 p-2 bg-gray-800 border border-white rounded text-white"
+        >
+          {[2, 5, 10].map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };
 
 export default DeviceTable;
-              
-           
