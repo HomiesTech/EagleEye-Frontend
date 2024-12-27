@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useSearchParams } from "react-router-dom";
 
-// Interface definition with required fields
 interface Alarm {
   severity: number;
   entityType: string | null;
   entityId: number | null;
-  key: string | null;
+  alarmKey: string | null;
   status: string | null;
   startTime: string | null;
   duration: number | null;
@@ -16,25 +15,32 @@ interface Alarm {
 }
 
 const Alarms: React.FC = () => {
-  const [alarms, setAlarms] = useState<Alarm[]>([]); // State to store alarms from API
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
+  const [alarms, setAlarms] = useState<Alarm[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filteredAlarms, setFilteredAlarms] = useState<Alarm[]>([]);
-  const [filterKeyField, setFilterKeyField] = useState<string>("key"); // Field to filter key
+  const [filterKeyField, setFilterKeyField] = useState<string>("key");
   const [filterKey, setFilterKey] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<string>("");
   const [hideFiltered, setHideFiltered] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
   const entityId = searchParams.get("entityId");
-  const [popupAlarm, setPopupAlarm] = useState<Alarm | null>(null); // State for popup
+  const severityParam = searchParams.get("severity");
+  const [popupAlarm, setPopupAlarm] = useState<Alarm | null>(null);
 
-  // Fetch alarms from API
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
   useEffect(() => {
-    const fetchAlarms = async () => {
+
+    const fetchAlarms = async (currentPage:number,pageSize:number) => {
       try {
-        const response = await axios.get<Alarm[]>("https://service.homenetics.in/eagleeye/alarms");
-        setAlarms(response.data); // Save data from API to state
-        setFilteredAlarms(response.data);
+        const response = await axios.get(
+          `http://172.16.0.10/eagleeye/alarms?page=${currentPage}&size=${pageSize}&sortFields=severity,startTime&sortOrders=desc,desc`
+        );
+        setAlarms(response.data.content);
+        setTotalPages(response.data.totalPages);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching alarms:", err);
@@ -42,20 +48,17 @@ const Alarms: React.FC = () => {
         setLoading(false);
       }
     };
+    fetchAlarms(currentPage,pageSize);
+    const intervalId = setInterval(() => {
+      fetchAlarms(currentPage,pageSize);
+    }, 60000);
 
-    fetchAlarms();
-  }, []);
+    return () => {
+      clearInterval(intervalId);
+    };
+    
+  }, [currentPage, severityParam, pageSize]);
 
-// const togglePopup = (alarm:Alarm) => {
-//   setPopupAlarm(alarm);
-// };
-const closePopup = () => {
-  setPopupAlarm(null);
-};
-
-
-
-  // Fetch and filter alarms based on entityId if passed in query params
   useEffect(() => {
     if (entityId) {
       const filtered = alarms.filter((alarm) => alarm.entityId === parseInt(entityId));
@@ -84,27 +87,29 @@ const closePopup = () => {
 
   const filterAlarms = (field: string, key: string, status: string) => {
     const sortedAlarms = alarms.sort((a, b) => {
-      const severityOrder = [4, 3, 2, 1]; // Error -> Warn -> Ok -> Info
+      const severityOrder = [4, 3, 2, 1];
       return severityOrder.indexOf(b.severity) - severityOrder.indexOf(a.severity);
     });
-    setFilteredAlarms(
-      sortedAlarms.filter((alarm) => {
-        const fieldValue = alarm[field as keyof Alarm];
-        const statusValue = alarm.status || "";
 
-        // Exact match for entityId (numeric search)
-        if (field === "entityId" && key !== "") {
-          return fieldValue === parseInt(key, 10);
-        }
+    if (hideFiltered) {
+      setFilteredAlarms(
+        sortedAlarms.filter(alarm => !filteredAlarms.includes(alarm))
+      );
+    } else {
+      setFilteredAlarms(
+        sortedAlarms.filter(alarm => {
+          const fieldValue = alarm[field as keyof Alarm];
+          const statusValue = alarm.status || "";
 
-        // Default partial match for other fields
-        return (
-          ((fieldValue || "").toString().toLowerCase().includes(key.toLowerCase()) || key === "") &&
-          (statusValue.toLowerCase().includes(status.toLowerCase()) || status === "")
-        );  
-      })
-    );
+          return (
+            ((fieldValue || "").toString().toLowerCase().includes(key.toLowerCase()) || key === "") &&
+            (statusValue.toLowerCase().includes(status.toLowerCase()) || status === "")
+          );
+        })
+      );
+    }
   };
+
   const formatDuration = (duration: number | null): string => {
     if (duration === null || duration < 0) return "N/A";
 
@@ -117,7 +122,7 @@ const closePopup = () => {
       days > 0 ? `${days}d` : "",
       hours > 0 ? `${hours}h` : "",
       minutes > 0 ? `${minutes}m` : "0 m",
-      minutes > 0 ? (seconds > 0 ? `${seconds}s` : "") : "",
+      seconds > 0 ? `${seconds}s` : "",
     ]
       .filter(Boolean)
       .join(" ");
@@ -126,13 +131,13 @@ const closePopup = () => {
   const renderSeverityIcon = (severity: number) => {
     switch (severity) {
       case 1:
-        return <span className="text-blue-500">&#9432;</span>; // Blue circle with "i"
+        return <span className="text-blue-500">&#9432;</span>;
       case 2:
-        return <span className="text-green-500">&#128154;</span>; // Green star
+        return <span className="text-green-500">&#128154;</span>;
       case 3:
-        return <span className="text-yellow-500">⚠ </span>; // Yellow warning triangle
+        return <span className="text-yellow-500">⚠</span>;
       case 4:
-        return <span className="text-red-500 text-2xl">&#8856;</span>; // Red exclamation mark
+        return <span className="text-red-500 text-2xl">&#8856;</span>;
       default:
         return <span className="text-gray-500">Unknown</span>;
     }
@@ -153,20 +158,14 @@ const closePopup = () => {
     }
   };
 
-  if (loading) {
-    return <div className="text-white">Loading alarms...</div>;
-  }
+  if (loading) return <div className="text-white">Loading alarms...</div>;
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div>
       <h1 className="text-lg font-bold mb-4">Alarms</h1>
 
-      {/* Filter Section */}
       <div className="mb-4">
         <div className="flex gap-4 mb-4">
           <div className="flex w-1/2 gap-2">
@@ -207,14 +206,14 @@ const closePopup = () => {
           <label className="text-white">Hide</label>
         </div>
       </div>
+
       <div className="bg-gray-900 border border-white p-2 mb-5 w-max h-auto">
         <div className="text-blue-400">Ⓘ - Info</div>
         <div className="text-green-500">💚 - OK</div>
         <div className="text-yellow-300">⚠ - Warn</div>
-        <div className="text-red-500"> ⊘ - Error</div>
+        <div className="text-red-500">⊘ - Error</div>
       </div>
 
-      {/* Alarm List */}
       <table className="w-full text-left border border-white">
         <thead>
           <tr className="bg-gray-900 text-white">
@@ -228,9 +227,9 @@ const closePopup = () => {
           </tr>
         </thead>
         <tbody>
-          {(!hideFiltered
-            ? filteredAlarms.sort((a, b) => b.severity - a.severity)
-            : alarms.filter((alarm) => !filteredAlarms.includes(alarm)).sort((a, b) => b.severity - a.severity)
+          {(hideFiltered == false
+            ? alarms.filter(alarm => !filteredAlarms.includes(alarm)).sort((a, b) => b.severity - a.severity)
+            : filteredAlarms.sort((a, b) => b.severity - a.severity)
           ).map((alarm, index) => (
             <tr key={index} className={`${getRowClass(alarm.severity)} text-black font-semibold`}>
               <td className="p-2 border border-white">{renderSeverityIcon(alarm.severity)}</td>
@@ -243,36 +242,73 @@ const closePopup = () => {
                     {`${alarm.entityType || "N/A"}=${alarm.entityId}`}
                   </Link>
                 ) : (
-                  "N/A"
+                  <span>N/A</span>
                 )}
               </td>
-              <td className="p-2 border border-white">{alarm.key || "N/A"}</td>
+              <td className="p-2 border border-white">{alarm.alarmKey || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.status || "N/A"}</td>
               <td className="p-2 border border-white">{alarm.startTime ? new Date(alarm.startTime + "Z").toLocaleString() : "N/A"}</td>
               <td className="p-2 border border-white">{formatDuration(alarm.duration)}</td>
-            <td className="p-2 border border-white">
-              <button onClick={() => {console.log(alarm);setPopupAlarm(alarm);}} className="text-blue-500 hover:text-blue-700">
-              &#128065;
-
-              </button>
-            </td>
+              <td className="p-2 border border-white">
+                <button
+                  onClick={() => setPopupAlarm(alarm)}
+                  className="p-1 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                  Explore
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {/* Popup */}
+
+      <div className="mt-4 flex items-center gap-4">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
+          disabled={currentPage === 0}
+          className="p-2 bg-gray-700 text-white rounded hover:bg-gray-500"
+        >
+          Prev
+        </button>
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
+          disabled={currentPage === totalPages - 1}
+          className="p-2 bg-gray-700 text-white rounded hover:bg-gray-500"
+        >
+          Next
+        </button>
+        
+        <select
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+          className="p-2 bg-gray-900 border border-white rounded text-white"
+        >
+          {[10, 25, 50, 100].map(size => (
+            <option key={size} value={size}>
+              {size} per page
+            </option>
+          ))}
+        </select>
+      </div>
+
       {popupAlarm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-black/85 p-6 rounded-xl shadow-lg relative">
-            <h2 className="text-lg font-bold mb-4">Alarm Details</h2>
-            <p><strong>Detail:</strong> {popupAlarm.detail || "N/A"}</p>
-            <p><strong>Last Update Time:</strong> {popupAlarm.lastUpdatedTime ? new Date(popupAlarm.lastUpdatedTime + "Z").toLocaleString() :  "N/A"}</p>
-            <button
-              onClick={closePopup}
-              className="absolute top-2 right-2 text-white hover:text-red-500"
-            >
-              &times; {/* Close icon */}
-            </button>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-gray-800 p-4 rounded-md">
+            <h2 className="text-white text-lg mb-2">Alarm Details</h2>
+            <p className="text-white">Key: {popupAlarm.alarmKey || "N/A"}</p>
+            <p className="text-white">Status: {popupAlarm.status || "N/A"}</p>
+            <p className="text-white">Start Time: {popupAlarm.startTime || "N/A"}</p>
+            <p className="text-white">Duration: {formatDuration(popupAlarm.duration)}</p>
+            <p className="text-white">Detail: {popupAlarm.detail || "N/A"}</p>
+            <p className="text-white">Last Updated Time: {popupAlarm.lastUpdatedTime || "N/A"}</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setPopupAlarm(null)}
+                className="p-2 bg-gray-700 text-white rounded hover:bg-gray-500"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

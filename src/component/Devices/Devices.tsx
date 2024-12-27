@@ -21,26 +21,32 @@ const Devices: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10; // Number of devices per page
 
-  const fetchDevices = async (page: number) => {
-    setLoading(true);
-    setError(null);
-    page = page - 1;
-    try {
-      const url = `http://172.16.0.10/eagleeye/devices?page=${page}&size=${itemsPerPage}&sortFields=activeState&sortOrders=desc`;
-      const response = await axios.get(url);
-      console.log(response.data);
-      setDevices(response.data.content); // Assuming the response contains an `items` array
-      setTotalPages(response.data.totalPages || 1); // Assuming total pages are returned
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching devices:", err);
-      setError("Failed to fetch devices.");
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+
+    const fetchDevices = async (page: number) => {
+      setLoading(true);
+      setError(null);
+      page = page - 1;
+      try {
+        const url = `http://172.16.0.10/eagleeye/devices?page=${page}&size=${itemsPerPage}&sortFields=activeState&sortOrders=desc`;
+        const response = await axios.get(url);
+        console.log(response.data);
+        setDevices(response.data.content); // Assuming the response contains an `items` array
+        setTotalPages(response.data.totalPages || 1); // Assuming total pages are returned
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching devices:", err);
+        setError("Failed to fetch devices.");
+        setLoading(false);
+      }
+    };
     fetchDevices(currentPage);
+    const intervalId = setInterval(() => {
+      fetchDevices(currentPage);
+    }, 60000);
+
+    return () => clearInterval(intervalId);
   }, [currentPage, searchQuery]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
