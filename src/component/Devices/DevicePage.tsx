@@ -6,21 +6,24 @@ import Device from "../../interface/Device.interface";
 
 const DevicePage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get the device ID from URL params
-  const [device, setDevice] = useState<Device | null>(null);
+  const [device, setDevice] = useState<Device>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDevice = async () => {
       try {
-        const response = await axios.get<Device[]>(
-          "https://service.homenetics.in/eagleeye/devices"
+        const response = await axios.get<Device>(
+          `http://172.16.0.10/eagleeye/devices/${id}`
         );
-        const selectedDevice = response.data.find(
-          (d) => d.deviceId === parseInt(id || "0")
-        );
-        if (selectedDevice) {
-          setDevice(selectedDevice);
+        console.log(response);
+        if (response.status == 200) {
+          // Check if the response contains exactly one device
+          if (response.data) {
+            setDevice(response.data);
+          } else {
+            setError("Device not found.");
+          }
         } else {
           setError("Device not found.");
         }
@@ -53,9 +56,7 @@ const DevicePage: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4">
-
       <DeviceInfoTable device={device} />
-
 
       {/* User Table */}
       <div className="p-4 border border-white rounded-lg">
@@ -72,7 +73,7 @@ const DevicePage: React.FC = () => {
               <th className="border border-white px-4 py-2">Failures</th>
             </tr>
           </thead>
-          <tbody>
+          {/* <tbody>
             {device.deviceUsers && device.deviceUsers.length > 0 ? (
               device.deviceUsers.map((user, index) => (
                 <tr key={index}>
@@ -103,7 +104,7 @@ const DevicePage: React.FC = () => {
                 </td>
               </tr>
             )}
-          </tbody>
+          </tbody> */}
         </table>
       </div>
     </div>

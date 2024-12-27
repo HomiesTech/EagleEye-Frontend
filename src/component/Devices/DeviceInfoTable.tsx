@@ -25,9 +25,9 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
     navigate(`/monitor/alarms?entityId=${device.deviceId}`);
   };
 
-  const handleShowGraphs = () => {
-    navigate(`/monitor/graphs/${device.deviceId}`);
-  };
+  // const handleShowGraphs = () => {
+  //   navigate(`/monitor/graphs/${device.deviceId}`);
+  // };
   return (
     <div className="grid grid-cols-3 gap-4 mb-8">
       {/* Device Info */}
@@ -173,7 +173,7 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 WSS:
               </td>
               <td style={{ padding: "8px", border: "0px solid #ddd" }}>
-                <SignalMeter signalStrength={device.signalStrength} />
+                <SignalMeter signalStrength={device.wifiSignalStrength} />
               </td>
             </tr>
             <tr>
@@ -200,7 +200,7 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 {device.message_publish_status ? "OK" : "Not OK"}
               </td>
             </tr>
-            <tr>
+            {/* <tr>
               <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
                 Graphs:
               </td>
@@ -212,7 +212,7 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                   Show
                 </button>
               </td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>
@@ -255,14 +255,14 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
               <p className="font-bold mb-2">Flash Storage</p>
               <p>
                 Used:{" "}
-                {device.spiffsStorage && device.spiffsStorage.length > 0
-                  ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_used) / 1024).toFixed(2)} KB`
+                {device.spiffs_used
+                  ? `${((device.spiffs_used) / 1024).toFixed(2)} KB`
                   : "N/A"}
               </p>
               <p>
                 Total:{" "}
-                {device.spiffsStorage && device.spiffsStorage.length > 0
-                  ? `${((device.spiffsStorage[device.spiffsStorage.length - 1].spiffs_total) / 1024).toFixed(2)} KB`
+                {device.spiffs_total
+                  ? `${((device.spiffs_total) / 1024).toFixed(2)} KB`
                   : "N/A"}
               </p>
             </div>
@@ -272,20 +272,20 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
               <p className="font-bold mb-2">NVS Entries</p>
               <p>
                 Total:{" "}
-                {device.nvsStorage && device.nvsStorage.length > 0
-                  ? device.nvsStorage[device.nvsStorage.length - 1].nvs_total
+                {device.nvs_total
+                  ? device.nvs_total
                   : "N/A"}
               </p>
               <p>
                 Used:{" "}
-                {device.nvsStorage && device.nvsStorage.length > 0
-                  ? device.nvsStorage[device.nvsStorage.length - 1].nvs_used
+                {device.nvs_used
+                  ? device.nvs_used
                   : "N/A"}
               </p>
               <p>
                 Free:{" "}
-                {device.nvsStorage && device.nvsStorage.length > 0
-                  ? device.nvsStorage[device.nvsStorage.length - 1].nvs_free
+                {device.nvs_free
+                  ? device.nvs_free
                   : "N/A"}
               </p>
             </div>

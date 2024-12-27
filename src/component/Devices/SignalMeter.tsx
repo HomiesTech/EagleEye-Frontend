@@ -9,12 +9,21 @@ const SignalMeter: React.FC<SignalProps> = ({ signalStrength }) => {
   let deviceSignal = "N/A";
   let signalMeterWidth = 0;
   let attachClass = "bg-gray-300"; // Default Tailwind class for neutral state
-
+  if (signalStrength) {
+    if (signalStrength >= -30) { signalStrength = 1; }
+    else if (signalStrength >= -50) { signalStrength = 2; }
+    else if (signalStrength >= -60) { signalStrength = 3; }
+    else if (signalStrength >= -70) { signalStrength = 4; }
+    else if (signalStrength >= -80) { signalStrength = 5; }
+    else { signalStrength = 6;  }
+  } else {
+    signalStrength = 6;
+  }
   // Signal strength mapping
   if (signalStrength) {
     switch (signalStrength) {
       case 1:
-        deviceSignal = "Excellent";
+        deviceSignal = "Amazing";
         signalMeterWidth = 100;
         attachClass = "bg-green-500";
         break;
@@ -24,12 +33,12 @@ const SignalMeter: React.FC<SignalProps> = ({ signalStrength }) => {
         attachClass = "bg-teal-400";
         break;
       case 3:
-        deviceSignal = "Good";
+        deviceSignal = "Okay";
         signalMeterWidth = 60;
         attachClass = "bg-yellow-400";
         break;
       case 4:
-        deviceSignal = "Fair";
+        deviceSignal = "Not Good";
         signalMeterWidth = 40;
         attachClass = "bg-orange-500";
         break;
@@ -39,7 +48,7 @@ const SignalMeter: React.FC<SignalProps> = ({ signalStrength }) => {
         attachClass = "bg-red-500";
         break;
       case 6:
-        deviceSignal = "Very Poor";
+        deviceSignal = "Unusable";
         signalMeterWidth = 10;
         attachClass = "bg-red-800";
         break;
