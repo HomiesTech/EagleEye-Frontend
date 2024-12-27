@@ -57,7 +57,7 @@ const Alarms: React.FC = () => {
       clearInterval(intervalId);
     };
     
-  }, [currentPage, severityParam, pageSize]);
+  }, [currentPage, severityParam, pageSize, entityId]);
 
   useEffect(() => {
     if (entityId) {

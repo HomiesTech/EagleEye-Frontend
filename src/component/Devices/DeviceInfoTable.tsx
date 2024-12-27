@@ -22,7 +22,7 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
   const navigate = useNavigate();
 
   const handleShowAlarms = () => {
-    navigate(`/monitor/alarms?entityId=${device.deviceId}`);
+    navigate(`/monitor/enalarms?entityId=${device.deviceId}`);
   };
 
   // const handleShowGraphs = () => {

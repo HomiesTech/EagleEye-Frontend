@@ -12,6 +12,7 @@ import DeviceGraphs from "./component/Graph/GraphPage";
 import Customers from "./component/Customer/Customers";
 import Customerpage from "./component/Customer/Customerpage";
 import Alarms from "./component/Alerts/Alerts";
+import EntityAlerts from "./component/Alerts/EntityAlerts";
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/monitor/add-device" element={<AddDevice />} />
           <Route path="/monitor/alarms" element={<Alarms />} />
+          <Route path="/monitor/enalarms" element={<EntityAlerts />} />
           <Route path="/monitor/entity/:id" element={<DevicePage />} /> {/*open devicepage with entityid */}
           <Route path="/monitor/list-device" element={<ListDevice />} />
           <Route path="/monitor/customer" element={<Customers />} /> {/*all the customer*/}
