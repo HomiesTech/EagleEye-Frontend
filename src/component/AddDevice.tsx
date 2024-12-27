@@ -62,6 +62,17 @@ const AddDevice: React.FC = () => {
       .then((response) => {
         setDeviceData(response.data);
         setNotification("Device added successfully.");
+        setMac("");
+        setSsid("");
+        setNotification("");
+        axios
+      .get<{ ssid: string }>("http://172.16.0.10:34000/get_new_device_ssid")
+      .then((response) => {
+        setSsid(response.data.ssid || "Unknown SSID");
+      })
+      .catch(() => {
+        setNotification("Error fetching SSID");
+      });
       })
       .catch((error) => {
         setNotification(
