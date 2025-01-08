@@ -13,6 +13,7 @@ import Customers from "./component/Customer/Customers";
 import Customerpage from "./component/Customer/Customerpage";
 import Alarms from "./component/Alerts/Alerts";
 import EntityAlerts from "./component/Alerts/EntityAlerts";
+import Binary  from "./component/Binary-Generator/Binary";
 
 const App: React.FC = () => {
   return (
@@ -31,6 +32,7 @@ const App: React.FC = () => {
           <Route path="/monitor/signal-strength/:deviceId" element={<SignalStrength/>} />
           <Route path="/monitor/nvstorage/:deviceId" element={<NvsStorage/>} />
           <Route path="/monitor/graphs/:deviceId" element={<DeviceGraphs />} />
+          <Route path="/generate" element={<Binary/>} />
         </Routes>
       </Layout>
     </Router>
