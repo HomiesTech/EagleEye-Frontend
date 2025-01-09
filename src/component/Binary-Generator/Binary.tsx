@@ -5,30 +5,30 @@ import CONSTANTS from "../../config/constant";
 const Binary = () => {
   const [versions, setVersions] = useState<string[]>([]);
   const [selectedVersion, setSelectedVersion] = useState<string>("");
-  const [deviceId, setDeviceId] = useState<string>("");
+  const [deviceId, setDeviceId] = useState<string>("0");
   const [responseText, setResponseText] = useState<string>("");
 
   useEffect(() => {
     console.log("useEffect triggered on component mount");
 
     const fetchVersions = async () => {
-      try {
-        console.log("Fetching versions...");
-        console.log(CONSTANTS.deviceVersionApi);
-
-        const response = await axios.get<{ versions: string[] }>(
-          CONSTANTS.deviceVersionApi
-        );
-
-        console.log("Response received:", response);
-        if (response.data?.versions) {
-          console.log("Versions fetched:", response.data.versions);
-          setVersions(response.data.versions);
+        try {
+          console.log("Fetching versions...");
+          const response = await fetch(CONSTANTS.deviceVersionApi);
+          console.log("Response received:", response);
+          if (!response.ok) {
+            throw new Error("Failed to fetch versions");
+          }
+          const data = await response.json();
+          if (data?.versions) {
+            console.log("Versions fetched:", data.versions);
+            setVersions(data.versions);
+          }
+        } catch (error) {
+          console.log("Error fetching versions:", error);
         }
-      } catch (error) {
-        console.error("Error fetching versions:", error);
-      }
-    };
+      };
+      
 
     fetchVersions();
   }, []); // Empty dependency array ensures it runs only once
@@ -91,6 +91,7 @@ const Binary = () => {
           value={deviceId}
           onChange={(e) => setDeviceId(e.target.value)}
           placeholder="Enter Device ID"
+          style={{color: "black"}}
         />
       </div>
 
