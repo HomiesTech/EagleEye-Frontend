@@ -72,63 +72,70 @@ const Binary = () => {
   };
 
   return (
-    <div className="p-5">
-      {/* Dropdown to select a version */}
-      <label htmlFor="version-select" className="block mb-2">
-        Select a version:
-      </label>
-      <select
-        id="version-select"
-        value={selectedVersion}
-        onChange={(e) => setSelectedVersion(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md text-black"
-      >
-        <option value="">--Select a version--</option>
-        {versions.map((version, index) => (
-          <option key={index} value={version}>
-            {version}
-          </option>
-        ))}
-      </select>
+    <div className="">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+        {/* Dropdown to select a version */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 ">
+          <label htmlFor="version-select" className=" text-lg ">
+            Select a version:
+          </label>
+          <select
+            id="version-select"
+            value={selectedVersion}
+            onChange={(e) => setSelectedVersion(e.target.value)}
+            className="  border pl-3 border-gray-300 rounded-md text-black h-8"
+          >
+            <option value="">--Select a version--</option>
+            {versions.map((version, index) => (
+              <option key={index} value={version}>
+                {version}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Input for device ID */}
-      <div className="mt-4">
-        <label htmlFor="device-id" className="block mb-2">
-          Device ID:
-        </label>
-        <input
-          type="text"
-          id="device-id"
-          value={deviceId}
-          onChange={(e) => setDeviceId(e.target.value)}
-          placeholder="Enter Device ID"
-          className="w-full p-2 border border-gray-300 rounded-md text-black"
-        />
-      </div>
+        {/* Input for device ID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 ">
+          <label htmlFor="device-id" className="block text-lg mb-2">
+            Device ID:
+          </label>
+          <input
+            type="text"
+            id="device-id"
+            value={deviceId}
+            onChange={(e) => setDeviceId(e.target.value)}
+            placeholder="Enter Device ID"
+            className="w-full pl-3 border border-gray-300 rounded-md text-black h-8"
+          />
+        </div>
+     
 
       {/* Submit button */}
-      <button
-        className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-        onClick={handleSubmit}
-      >
-        Submit
-      </button>
+      {!loading && (
+        <div className=" w-full">
+        <button
+          className="px-10  bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 ml-auto  mr-6 h-8 block"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
+      </div>
+      )}
+       </div>
 
       {/* Loader (while loading data) */}
       {loading && (
         <div className="mt-4 text-center">
-          <div className="loader">Loading...</div> {/* Replace this with any loading spinner or animation */}
+          <div className="loader text-xl">Loading...</div> {/* Replace this with any loading spinner or animation */}
         </div>
       )}
 
       {/* Display the API response */}
-      {responseText && (
+      {!loading && responseText && (
         <div
-          className="mt-5 bg-white text-black p-4 rounded-md whitespace-pre-wrap"
+          className="mt-5 bg-white text-black p-4 rounded-md shadow-lg whitespace-pre-wrap min-h-96 max-h-[500px] overflow-y-auto"
           style={{
             whiteSpace: "pre-wrap",
-            maxHeight: "300px", // You can adjust this height as needed
-            overflowY: "auto", // Enables vertical scrolling
           }}
         >
           {responseText}
