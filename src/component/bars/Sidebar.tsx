@@ -38,7 +38,7 @@ export const Sidebar = () => {
           </Link>
           </li>
           <li>
-            <Link to= "/monitor/commands" className='hover:underline'>
+            <Link to= "/restart" className='hover:underline'>
             Commands
             </Link>
           </li>
