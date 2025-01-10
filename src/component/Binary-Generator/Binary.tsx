@@ -12,23 +12,22 @@ const Binary = () => {
     console.log("useEffect triggered on component mount");
 
     const fetchVersions = async () => {
-        try {
-          console.log("Fetching versions...");
-          const response = await fetch(CONSTANTS.deviceVersionApi);
-          console.log("Response received:", response);
-          if (!response.ok) {
-            throw new Error("Failed to fetch versions");
-          }
-          const data = await response.json();
-          if (data?.versions) {
-            console.log("Versions fetched:", data.versions);
-            setVersions(data.versions);
-          }
-        } catch (error) {
-          console.log("Error fetching versions:", error);
+      try {
+        console.log("Fetching versions...");
+        const response = await fetch(CONSTANTS.deviceVersionApi);
+        console.log("Response received:", response);
+        if (!response.ok) {
+          throw new Error("Failed to fetch versions");
         }
-      };
-      
+        const data = await response.json();
+        if (data?.versions) {
+          console.log("Versions fetched:", data.versions);
+          setVersions(data.versions);
+        }
+      } catch (error) {
+        console.log("Error fetching versions:", error);
+      }
+    };
 
     fetchVersions();
   }, []); // Empty dependency array ensures it runs only once
@@ -53,7 +52,7 @@ const Binary = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status) {
         const text = response.data; // Assuming the response is text
         setResponseText(text); // Display response text on the screen
       } else {
@@ -66,13 +65,16 @@ const Binary = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="p-5">
       {/* Dropdown to select a version */}
-      <label htmlFor="version-select">Select a version:</label>
+      <label htmlFor="version-select" className="block mb-2">
+        Select a version:
+      </label>
       <select
         id="version-select"
         value={selectedVersion}
         onChange={(e) => setSelectedVersion(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-md text-black"
       >
         <option value="">--Select a version--</option>
         {versions.map((version, index) => (
@@ -83,32 +85,34 @@ const Binary = () => {
       </select>
 
       {/* Input for device ID */}
-      <div style={{ marginTop: "10px" }}>
-        <label htmlFor="device-id">Device ID:</label>
+      <div className="mt-4">
+        <label htmlFor="device-id" className="block mb-2">
+          Device ID:
+        </label>
         <input
           type="text"
           id="device-id"
           value={deviceId}
           onChange={(e) => setDeviceId(e.target.value)}
           placeholder="Enter Device ID"
-          style={{color: "black"}}
+          className="w-full p-2 border border-gray-300 rounded-md text-black"
         />
       </div>
 
       {/* Submit button */}
-      <button style={{ marginTop: "10px" }} onClick={handleSubmit}>
+      <button
+        className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+        onClick={handleSubmit}
+      >
         Submit
       </button>
 
       {/* Display the API response */}
       {responseText && (
         <div
+          className="mt-5 p-4 rounded-md whitespace-pre-wrap"
           style={{
-            marginTop: "20px",
             whiteSpace: "pre-wrap",
-            backgroundColor: "#f0f0f0",
-            padding: "10px",
-            borderRadius: "5px",
           }}
         >
           {responseText}
