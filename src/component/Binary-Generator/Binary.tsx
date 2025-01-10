@@ -7,6 +7,7 @@ const Binary = () => {
   const [selectedVersion, setSelectedVersion] = useState<string>("");
   const [deviceId, setDeviceId] = useState<string>("0");
   const [responseText, setResponseText] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
 
   useEffect(() => {
     console.log("useEffect triggered on component mount");
@@ -14,6 +15,7 @@ const Binary = () => {
     const fetchVersions = async () => {
       try {
         console.log("Fetching versions...");
+        setLoading(true); // Set loading to true while fetching
         const response = await fetch(CONSTANTS.deviceVersionApi);
         console.log("Response received:", response);
         if (!response.ok) {
@@ -26,6 +28,8 @@ const Binary = () => {
         }
       } catch (error) {
         console.log("Error fetching versions:", error);
+      } finally {
+        setLoading(false); // Set loading to false after the request completes
       }
     };
 
@@ -39,6 +43,7 @@ const Binary = () => {
     }
 
     try {
+      setLoading(true); // Set loading to true when submitting the form
       const response = await axios.post(
         CONSTANTS.binaryGeneratorApi, // Replace with your POST API endpoint
         {
@@ -61,6 +66,8 @@ const Binary = () => {
     } catch (error) {
       console.error("Error posting data:", error);
       setResponseText("Failed to fetch response. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after the request completes
     }
   };
 
@@ -107,12 +114,21 @@ const Binary = () => {
         Submit
       </button>
 
+      {/* Loader (while loading data) */}
+      {loading && (
+        <div className="mt-4 text-center">
+          <div className="loader">Loading...</div> {/* Replace this with any loading spinner or animation */}
+        </div>
+      )}
+
       {/* Display the API response */}
       {responseText && (
         <div
-          className="mt-5 p-4 rounded-md whitespace-pre-wrap"
+          className="mt-5 bg-white text-black p-4 rounded-md whitespace-pre-wrap"
           style={{
             whiteSpace: "pre-wrap",
+            maxHeight: "300px", // You can adjust this height as needed
+            overflowY: "auto", // Enables vertical scrolling
           }}
         >
           {responseText}

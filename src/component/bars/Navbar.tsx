@@ -17,7 +17,7 @@ const Navbar = () => {
           <div className="font-bold">EagleEye (Homenetics)</div>
           <div>
             
-            <span ><Link to="/generate" className="hover:underline"> Select verison </Link></span>
+            <span ><Link to="/generate" className="hover:underline mr-10"> Select verison </Link></span>
             <span className="mr-4">Version: {CONSTANTS.version}</span>
             <span>Date:{dateTime}</span>
           </div>
