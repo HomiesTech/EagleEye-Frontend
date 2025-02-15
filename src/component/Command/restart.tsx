@@ -4,16 +4,16 @@ import CONSTANTS from '../../config/constant';
 
 const RestartESPPage = () => {
   const [macAddress, setMacAddress] = useState('');
-  const [command, setCommand] = useState('');
+  const [command, setCommand] = useState('restart'); // Default command set to "restart"
   const [relayNo, setRelayNo] = useState('');
   const [state, setState] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false); // New state for loading
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    setLoading(true); // Set loading to true
+    setLoading(true);
 
     const data = {
       mac_address: macAddress,
@@ -30,7 +30,7 @@ const RestartESPPage = () => {
       setErrorMessage('An unexpected error occurred');
       setResponseMessage('');
     } finally {
-      setLoading(false); // Set loading to false after the request
+      setLoading(false);
     }
   };
 
@@ -43,7 +43,7 @@ const RestartESPPage = () => {
           <input
             type="text"
             value={macAddress}
-            onChange={(e) => setMacAddress(e.target.value)}
+            onChange={(e) => setMacAddress(e.target.value.replace(/_/g, ":").replace(/\s+/g, ""))}
             required
             className="flex-1 p-2 rounded border border-gray-300 text-black"
           />
@@ -57,7 +57,6 @@ const RestartESPPage = () => {
             required
             className="flex-1 p-2 rounded border border-gray-300 text-black"
           >
-            <option value="">Select Command</option>
             <option value="change-relay">Change Relay</option>
             <option value="restart">Restart</option>
           </select>
@@ -101,7 +100,7 @@ const RestartESPPage = () => {
         <button
           type="submit"
           className="w-full p-3 bg-blue-500 text-white rounded cursor-pointer font-bold disabled:bg-gray-400"
-          disabled={loading} // Disable button while loading
+          disabled={loading}
         >
           {loading ? 'Processing...' : 'Execute'}
         </button>
