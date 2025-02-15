@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CONSTANTS from "../../config/constant"
 import { getCurrentDateTimeInIST } from "../../config/DateAndTime";
-import { Link } from "react-router-dom";
+
 
 
 const Navbar = () => {
@@ -17,7 +17,7 @@ const Navbar = () => {
           <div className="font-bold">EagleEye (Homenetics)</div>
           <div>
             
-            <span ><Link to="/generate" className="hover:underline mr-10"> Select verison </Link></span>
+
             <span className="mr-4">Version: {CONSTANTS.version}</span>
             <span>Date:{dateTime}</span>
           </div>
