@@ -1,4 +1,5 @@
 interface Device {
+    onlineInDb: boolean;
     deviceId: number;
     ssid: string| null;
     downloadMqttUrlResponseCode:number;

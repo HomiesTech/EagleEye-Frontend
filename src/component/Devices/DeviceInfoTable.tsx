@@ -200,6 +200,15 @@ const DeviceInfoTable = ({ device }: { device: Device }) => {
                 {device.message_publish_status ? "OK" : "Not OK"}
               </td>
             </tr>
+            <tr>
+              <td style={{width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd"}} >
+                onlineInDb : 
+                 </td>
+                 <td  style={{ padding: "8px", border: "0px solid #ddd" }}>
+                   {device.onlineInDb ? "True" : "False"}
+
+                 </td>
+            </tr>
             {/* <tr>
               <td style={{ width: "150px", fontWeight: "bold", padding: "8px", border: "0px solid #ddd" }}>
                 Graphs:
