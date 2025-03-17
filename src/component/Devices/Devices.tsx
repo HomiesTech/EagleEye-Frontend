@@ -29,7 +29,7 @@ const Devices: React.FC = () => {
       setError(null);
       page = page - 1;
       try {
-        const url = `http://172.16.0.10/eagleeye/devices?page=${page}&size=${itemsPerPage}&sortFields=activeState&sortOrders=desc`;
+        const url = `https://monitor.homenetics.in/eagleeye/devices?page=${page}&size=${itemsPerPage}&sortFields=activeState&sortOrders=desc`;
         const response = await axios.get(url);
         console.log(response.data);
         setDevices(response.data.content); // Assuming the response contains an `items` array

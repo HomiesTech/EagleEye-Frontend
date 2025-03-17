@@ -14,7 +14,7 @@ const DevicePage: React.FC = () => {
     const fetchDevice = async () => {
       try {
         const response = await axios.get<Device>(
-          `http://172.16.0.10/eagleeye/devices/${id}`
+          `https://monitor.homenetics.in/eagleeye/devices/${id}`
         );
         console.log(response);
         if (response.status == 200) {

@@ -32,7 +32,7 @@ const AddDevice: React.FC = () => {
   // Fetch SSID on component mount
   useEffect(() => {
     axios
-      .get<{ ssid: string }>("http://172.16.0.10:34000/get_new_device_ssid")
+      .get<{ ssid: string }>("https://monitor.homenetics.in:34000/get_new_device_ssid")
       .then((response) => {
         setSsid(response.data.ssid || "Unknown SSID");
       })
@@ -66,7 +66,7 @@ const AddDevice: React.FC = () => {
         setSsid("");
         setNotification("");
         axios
-      .get<{ ssid: string }>("http://172.16.0.10:34000/get_new_device_ssid")
+      .get<{ ssid: string }>("https://monitor.homenetics.in:34000/get_new_device_ssid")
       .then((response) => {
         setSsid(response.data.ssid || "Unknown SSID");
       })

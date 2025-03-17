@@ -37,7 +37,7 @@ const Alarms: React.FC = () => {
     const fetchAlarms = async (currentPage:number,pageSize:number) => {
       try {
         const response = await axios.get(
-          `http://172.16.0.10/eagleeye/alarms?page=${currentPage}&size=${pageSize}&sortFields=severity,startTime&sortOrders=desc,desc`
+          `https://monitor.homenetics.in/eagleeye/alarms?page=${currentPage}&size=${pageSize}&sortFields=severity,startTime&sortOrders=desc,desc`
         );
         setAlarms(response.data.content);
         setTotalPages(response.data.totalPages);

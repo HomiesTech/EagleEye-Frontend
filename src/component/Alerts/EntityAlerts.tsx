@@ -26,7 +26,7 @@ const EntityAlerts: React.FC = () => {
     const fetchAlarms = async () => {
       try {
         const response = await axios.get(
-          `http://172.16.0.10/eagleeye/alarms/${entityId}`
+          `https://monitor.homenetics.in/eagleeye/alarms/${entityId}`
         );
         console.log(response.data);
         setAlarms(response.data);
