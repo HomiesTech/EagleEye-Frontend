@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 interface Device {
+  syncTime: ReactNode;
   deviceId: number;
   ssid: string | null;
   macAddress: string | null;
@@ -93,6 +94,7 @@ const Devices: React.FC = () => {
             <th className="p-2 border border-white">IP Address</th>
             <th className="p-2 border border-white">Active</th>
             <th className="p-2 border border-white">Version</th>
+            <th className="p-2 border border-white">SyncTime</th>
           </tr>
         </thead>
         <tbody>
@@ -112,26 +114,30 @@ const Devices: React.FC = () => {
               <td className="p-2 border border-white">{device.ipAddress || "N/A"}</td>
               <td className="p-2 border border-white">
                 <span
-                  className={`px-3 py-1 rounded-full text-black font-bold ${
-                    device.activeState === 0
+                  className={`px-3 py-1 rounded-full text-black font-bold ${device.activeState === 0
                       ? "bg-red-500"
                       : device.activeState === 1
-                      ? "bg-green-500"
-                      : device.activeState === 2
-                      ? "bg-yellow-600"
-                      : "bg-gray-200"
-                  }`}
+                        ? "bg-green-500"
+                        : device.activeState === 2
+                          ? "bg-yellow-600"
+                          : "bg-gray-200"
+                    }`}
                 >
                   {device.activeState === 0
                     ? "Inactive"
                     : device.activeState === 1
-                    ? "Active"
-                    : device.activeState === 2
-                    ? "Waiting"
-                    : "Unknown"}
+                      ? "Active"
+                      : device.activeState === 2
+                        ? "Waiting"
+                        : "Unknown"}
                 </span>
               </td>
               <td className="p-2 border border-white">{device.codeVersion || "N/A"}</td>
+              <td className="p-2 border border-white">
+                {device.syncTime
+                  ? new Date(device.syncTime + "Z").toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+                  : "N/A"}
+              </td>
             </tr>
           ))}
         </tbody>
