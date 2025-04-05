@@ -58,7 +58,7 @@ const Binary = () => {
       );
 
       if (response.status) {
-        const text = response.data; // Assuming the response is text
+        const text = response.data as string; // Assuming the response is text
         setResponseText(text); // Display response text on the screen
       } else {
         throw new Error("Network response was not ok");

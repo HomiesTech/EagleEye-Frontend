@@ -10,6 +10,10 @@ interface Device {
   updatedAt: string;
   lastConnectionAt: string | null;
 }
+interface DevicesApiResponse {
+  devices: Device[];
+  totalPages: number;
+}
 
 const DeviceTable: React.FC = () => {
   const [devices, setDevices] = useState<Device[]>([]); // API device list
@@ -26,7 +30,7 @@ const DeviceTable: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(
+        const response = await axios.get<DevicesApiResponse>(
           `https://service.homenetics.in/database/api/devices?page=${page}&pageSize=${pageSize}`
         );
         setDevices(response.data.devices); // Set the devices from API

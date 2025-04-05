@@ -22,8 +22,12 @@ const RestartESPPage = () => {
       state,
     };
 
+    type RestartResponse = {
+      message: string;
+    };
+
     try {
-      const res = await axios.post(CONSTANTS.restart, data);
+      const res = await axios.post<RestartResponse>(CONSTANTS.restart, data);
       setResponseMessage(res.data.message);
       setErrorMessage('');
     } catch {

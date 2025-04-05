@@ -14,6 +14,12 @@ interface Alarm {
   lastUpdatedTime?: string;
 }
 
+interface AlarmResponse {
+  content: Alarm[];
+  totalPages: number;
+}
+
+
 const Alarms: React.FC = () => {
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +42,7 @@ const Alarms: React.FC = () => {
 
     const fetchAlarms = async (currentPage:number,pageSize:number) => {
       try {
-        const response = await axios.get(
+        const response = await axios.get<AlarmResponse>(
           `https://monitor.homenetics.in/eagleeye/alarms?page=${currentPage}&size=${pageSize}&sortFields=severity,startTime&sortOrders=desc,desc`
         );
         setAlarms(response.data.content);
